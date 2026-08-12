@@ -1,0 +1,11 @@
+.venv/
+.venv-align/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+debug_ocr_empty.png
+.pytest_cache/
+.idea/
+.vscode/
+ocr_test.png

@@ -1,0 +1,13 @@
+FROM hf.co/liodon-ai/Riva-Translate-4B-Instruct-v2-imatrix-GGUF:Q6_K
+
+TEMPLATE """<s>System
+You are an expert at translating text from English to Russian.</s>
+<s>User
+What is the Russian translation of the sentence: {{ .Prompt }}</s>
+<s>Assistant
+{{ .Response }}"""
+
+PARAMETER temperature 0
+PARAMETER seed 42
+PARAMETER num_ctx 2048
+PARAMETER stop "</s>"

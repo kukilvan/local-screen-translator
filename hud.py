@@ -628,38 +628,86 @@ class TranslationHUD(QWidget):
             - screen_margin
         )
 
-        x = cursor.x() + SETTINGS.hud_offset_x
-        y = cursor.y() + SETTINGS.hud_offset_y
+        gap = 14
 
-        if x + self.width() > safe_right:
+        if source_rect:
+            (
+                source_x,
+                source_y,
+                source_width,
+                source_height,
+            ) = source_rect
+
             x = (
                 cursor.x()
-                - self.width()
-                - 18
+                + SETTINGS.hud_offset_x
             )
 
-        if y + self.height() > safe_bottom:
+            x = max(
+                safe_left,
+                min(
+                    x,
+                    safe_right - self.width() + 1,
+                ),
+            )
+
+            below_y = (
+                source_y
+                + source_height
+                + gap
+            )
+
+            above_y = (
+                source_y
+                - self.height()
+                - gap
+            )
+
+            if (
+                below_y
+                + self.height()
+                <= safe_bottom
+            ):
+                y = below_y
+
+            elif above_y >= safe_top:
+                y = above_y
+
+            else:
+                y = max(
+                    safe_top,
+                    min(
+                        below_y,
+                        safe_bottom - self.height() + 1,
+                    ),
+                )
+
+        else:
+            x = (
+                cursor.x()
+                + SETTINGS.hud_offset_x
+            )
+
             y = (
                 cursor.y()
-                - self.height()
-                - 18
+                + SETTINGS.hud_offset_y
             )
 
-        x = max(
-            safe_left,
-            min(
-                x,
-                safe_right - self.width() + 1,
-            ),
-        )
+            x = max(
+                safe_left,
+                min(
+                    x,
+                    safe_right - self.width() + 1,
+                ),
+            )
 
-        y = max(
-            safe_top,
-            min(
-                y,
-                safe_bottom - self.height() + 1,
-            ),
-        )
+            y = max(
+                safe_top,
+                min(
+                    y,
+                    safe_bottom - self.height() + 1,
+                ),
+            )
 
         self.move(x, y)
         self.show()

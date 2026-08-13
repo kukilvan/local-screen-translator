@@ -2,6 +2,7 @@ from __future__ import annotations
 import html
 import re
 import ctypes
+from PySide6.QtGui import QColor, QPainter, QPen
 
 from PySide6.QtCore import QPoint, QRect, Qt, QTimer
 from PySide6.QtGui import QCursor, QGuiApplication
@@ -9,8 +10,96 @@ from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 from config import SETTINGS
 
+class SourceHighlight(QWidget):
+    def __init__(self) -> None:
+        flags = (
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.Tool
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.WindowDoesNotAcceptFocus
+        )
 
-class TranslationHUD(QWidget):
+        super().__init__(
+            None,
+            flags,
+        )
+
+        self.setAttribute(
+            Qt.WidgetAttribute.WA_TranslucentBackground,
+            True,
+        )
+
+        self.setAttribute(
+            Qt.WidgetAttribute.WA_ShowWithoutActivating,
+            True,
+        )
+
+    def show_source_rect(
+        self,
+        source_rect,
+    ) -> None:
+        if not source_rect:
+            self.hide()
+            return
+
+        x, y, width, height = source_rect
+
+        padding_x = 6
+        padding_y = 4
+
+        self.setGeometry(
+            x - padding_x,
+            y - padding_y,
+            width + padding_x * 2,
+            height + padding_y * 2,
+        )
+
+        self.show()
+        self.raise_()
+        self.update()
+
+    def paintEvent(self, event) -> None:
+        painter = QPainter(self)
+
+        painter.setRenderHint(
+            QPainter.RenderHint.Antialiasing,
+            True,
+        )
+
+        painter.setBrush(
+            QColor(
+                115,
+                213,
+                255,
+                28,
+            )
+        )
+
+        painter.setPen(
+            QPen(
+                QColor(
+                    115,
+                    213,
+                    255,
+                    190,
+                ),
+                1.0,
+            )
+        )
+
+        rect = self.rect().adjusted(
+            1,
+            1,
+            -1,
+            -1,
+        )
+
+        painter.drawRoundedRect(
+            rect,
+            5,
+            5,
+        )
+class FocusHighlight(QWidget):
     def __init__(self) -> None:
         flags = (
             Qt.WindowType.FramelessWindowHint
@@ -19,12 +108,105 @@ class TranslationHUD(QWidget):
             | Qt.WindowType.WindowDoesNotAcceptFocus
             | Qt.WindowType.WindowTransparentForInput
         )
+
+        super().__init__(
+            None,
+            flags,
+        )
+
+        self.setAttribute(
+            Qt.WidgetAttribute.WA_TranslucentBackground,
+            True,
+        )
+
+        self.setAttribute(
+            Qt.WidgetAttribute.WA_ShowWithoutActivating,
+            True,
+        )
+
+    def show_source_rect(
+        self,
+        source_rect,
+    ) -> None:
+        if not source_rect:
+            self.hide()
+            return
+
+        x, y, width, height = source_rect
+
+        padding_x = 6
+        padding_y = 4
+
+        self.setGeometry(
+            x - padding_x,
+            y - padding_y,
+            width + padding_x * 2,
+            height + padding_y * 2,
+        )
+
+        self.show()
+        self.raise_()
+        self.update()
+
+    def paintEvent(self, event) -> None:
+        painter = QPainter(self)
+
+        painter.setRenderHint(
+            QPainter.RenderHint.Antialiasing,
+            True,
+        )
+
+        painter.setBrush(
+            QColor(
+                255,
+                190,
+                70,
+                35,
+            )
+        )
+
+        painter.setPen(
+            QPen(
+                QColor(
+                    255,
+                    190,
+                    70,
+                    220,
+                ),
+                1.0,
+            )
+        )
+
+        rect = self.rect().adjusted(
+            1,
+            1,
+            -1,
+            -1,
+        )
+
+        painter.drawRoundedRect(
+            rect,
+            5,
+            5,
+        )
+class TranslationHUD(QWidget):
+    def __init__(self) -> None:
+        flags = (
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.Tool
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.WindowDoesNotAcceptFocus
+        )
         super().__init__(None, flags)
 
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
 
         self._label = QLabel()
+        self._label.setAttribute(
+            Qt.WidgetAttribute.WA_TransparentForMouseEvents,
+            True,
+        )
         self._label.setWordWrap(True)
         self._label.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
         self._label.setStyleSheet(
@@ -40,6 +222,10 @@ class TranslationHUD(QWidget):
         )
 
         frame = QFrame()
+        frame.setAttribute(
+            Qt.WidgetAttribute.WA_TransparentForMouseEvents,
+            True,
+        )
         frame.setObjectName("HudFrame")
         frame.setStyleSheet(
             """
@@ -60,7 +246,7 @@ class TranslationHUD(QWidget):
 
         self._auto_hide = QTimer(self)
         self._auto_hide.setSingleShot(True)
-        self._auto_hide.timeout.connect(self.hide)
+        self._auto_hide.timeout.connect(self.hide_all)
 
         # While visible only, check mouse buttons. The HUD itself is click-through,
         # so the game/app receives the click and the popup disappears immediately.
@@ -69,6 +255,10 @@ class TranslationHUD(QWidget):
         self._click_watch.timeout.connect(self._hide_on_mouse_click)
 
         self._mouse_was_down = False
+        self._source_highlight = SourceHighlight()
+        self._focus_highlight = FocusHighlight()
+        self._dragging = False
+        self._drag_offset = QPoint()
 
     def _apply_win32_noactivate(self) -> None:
         if not self.winId():
@@ -91,11 +281,22 @@ class TranslationHUD(QWidget):
         get_window_long.restype = ctypes.c_longlong
         set_window_long.restype = ctypes.c_longlong
 
-        exstyle = get_window_long(hwnd, GWL_EXSTYLE)
+        exstyle = get_window_long(
+            hwnd,
+            GWL_EXSTYLE,
+        )
+
+        exstyle = (
+            exstyle
+            & ~WS_EX_TRANSPARENT
+        )
+
         set_window_long(
             hwnd,
             GWL_EXSTYLE,
-            exstyle | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT,
+            exstyle
+            | WS_EX_NOACTIVATE
+            | WS_EX_TOOLWINDOW,
         )
 
         user32.SetWindowPos(
@@ -118,24 +319,152 @@ class TranslationHUD(QWidget):
             user32.GetAsyncKeyState(vk) & 0x8000
             for vk in (VK_LBUTTON, VK_RBUTTON, VK_MBUTTON)
         )
+    def mousePressEvent(self, event) -> None:
+
+        if event.button() == Qt.MouseButton.LeftButton:
+            self._dragging = True
+
+            self._drag_offset = (
+                event.globalPosition().toPoint()
+                - self.pos()
+            )
+
+            self._auto_hide.stop()
+
+            event.accept()
+            return
+
+        super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event) -> None:
+        if (
+            self._dragging
+            and event.buttons() & Qt.MouseButton.LeftButton
+        ):
+            new_pos = (
+                event.globalPosition().toPoint()
+                - self._drag_offset
+            )
+
+            cursor_pos = event.globalPosition().toPoint()
+
+            screen = QGuiApplication.screenAt(
+                cursor_pos
+            )
+
+            if screen is None:
+                screen = QGuiApplication.primaryScreen()
+
+            if screen is not None:
+                available = screen.availableGeometry()
+
+                margin = 12
+
+                min_x = available.left() + margin
+                min_y = available.top() + margin
+
+                max_x = (
+                    available.right()
+                    - self.width()
+                    - margin
+                    + 1
+                )
+
+                max_y = (
+                    available.bottom()
+                    - self.height()
+                    - margin
+                    + 1
+                )
+
+                new_pos.setX(
+                    max(
+                        min_x,
+                        min(
+                            new_pos.x(),
+                            max_x,
+                        ),
+                    )
+                )
+
+                new_pos.setY(
+                    max(
+                        min_y,
+                        min(
+                            new_pos.y(),
+                            max_y,
+                        ),
+                    )
+                )
+
+            self.move(
+                new_pos
+            )
+
+            event.accept()
+            return
+
+        super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event) -> None:
+        if (
+            event.button() == Qt.MouseButton.LeftButton
+            and self._dragging
+        ):
+            self._dragging = False
+
+            event.accept()
+            return
+
+        super().mouseReleaseEvent(event)
 
     def _hide_on_mouse_click(self) -> None:
         down = self._any_mouse_button_down()
-        if down and not self._mouse_was_down:
-            self.hide()
+
+        if (
+            down
+            and not self._mouse_was_down
+            and not self._dragging
+        ):
+            mouse_pos = QCursor.pos()
+
+            if not self.geometry().contains(
+                mouse_pos
+            ):
+                self.hide_all()
+
         self._mouse_was_down = down
 
     def hideEvent(self, event) -> None:
+        self._source_highlight.hide()
+        self._focus_highlight.hide()
+
+        super().hideEvent(event)
+    def hide_all(self) -> None:
         self._auto_hide.stop()
         self._click_watch.stop()
-        super().hideEvent(event)
 
+        self._source_highlight.hide()
+        self._focus_highlight.hide()
+
+        self.hide()
+    def hideEvent(self, event) -> None:
+        self._source_highlight.hide()
+        super().hideEvent(event)
     def show_message(
         self,
         text: str,
         cursor_pos: tuple[int, int] | None = None,
+        source_rect=None,
+        focus_rect=None,
     ) -> None:
         raw_text = text.strip()
+        self._source_highlight.show_source_rect(
+            source_rect
+        )
+        self._focus_highlight.show_source_rect(
+            focus_rect
+        )
 
         start_marker = "<<<CURSOR>>>"
         end_marker = "<<<END_CURSOR>>>"
@@ -277,28 +606,58 @@ class TranslationHUD(QWidget):
 
         available: QRect = screen.availableGeometry()
 
+        screen_margin = 12
+
+        safe_left = (
+            available.left()
+            + screen_margin
+        )
+
+        safe_top = (
+            available.top()
+            + screen_margin
+        )
+
+        safe_right = (
+            available.right()
+            - screen_margin
+        )
+
+        safe_bottom = (
+            available.bottom()
+            - screen_margin
+        )
+
         x = cursor.x() + SETTINGS.hud_offset_x
         y = cursor.y() + SETTINGS.hud_offset_y
 
-        if x + self.width() > available.right():
-            x = cursor.x() - self.width() - 18
+        if x + self.width() > safe_right:
+            x = (
+                cursor.x()
+                - self.width()
+                - 18
+            )
 
-        if y + self.height() > available.bottom():
-            y = cursor.y() - self.height() - 18
+        if y + self.height() > safe_bottom:
+            y = (
+                cursor.y()
+                - self.height()
+                - 18
+            )
 
         x = max(
-            available.left(),
+            safe_left,
             min(
                 x,
-                available.right() - self.width() + 1,
+                safe_right - self.width() + 1,
             ),
         )
 
         y = max(
-            available.top(),
+            safe_top,
             min(
                 y,
-                available.bottom() - self.height() + 1,
+                safe_bottom - self.height() + 1,
             ),
         )
 

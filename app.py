@@ -3,6 +3,10 @@ import traceback
 import ctypes
 import re
 import sys
+import subprocess
+import socket
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QMenu, QStyle, QSystemTrayIcon
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -156,7 +160,7 @@ def insert_cursor_markers_by_token_indices(
 
 
 class WorkerSignals(QObject):
-    done = Signal(int, str, int, int)
+    done = Signal(int, str, int, int, object, object)
     failed = Signal(int, str, int, int)
     preload_status = Signal(bool)
 
@@ -230,6 +234,7 @@ class TranslatorController(QObject):
         cursor_y: int,
     ) -> None:
         try:
+            focus_rect = None
             if mode == "word":
                 t0 = time.perf_counter()
 
@@ -279,6 +284,32 @@ class TranslatorController(QObject):
                             flush=True,
                         )
 
+                        source_rect = (
+                        int(
+                            round(
+                                cursor_x
+                                - snapshot.cursor_x
+                                + target.rect.x
+                            )
+                        ),
+                        int(
+                            round(
+                                cursor_y
+                                - snapshot.cursor_y
+                                + target.rect.y
+                            )
+                        ),
+                        int(
+                            round(
+                                target.rect.w
+                            )
+                        ),
+                        int(
+                            round(
+                                target.rect.h
+                            )
+                        ),
+                    )
                         marked_context = choose_paragraph(snapshot)
 
                         break
@@ -423,10 +454,71 @@ class TranslatorController(QObject):
                     flush=True,
                 )
 
-                marked_paragraph = choose_paragraph(
+                (
+                    marked_paragraph,
+                    paragraph_rect,
+                ) = choose_paragraph(
+                    snapshot,
+                    return_rect=True,
+                )
+
+                source_rect = (
+
+                    int(
+                        round(
+                            cursor_x
+                            - snapshot.cursor_x
+                            + paragraph_rect.x
+                        )
+                    ),
+                    int(
+                        round(
+                            cursor_y
+                            - snapshot.cursor_y
+                            + paragraph_rect.y
+                        )
+                    ),
+                    int(
+                        round(
+                            paragraph_rect.w
+                        )
+                    ),
+                    int(
+                        round(
+                            paragraph_rect.h
+                        )
+                    ),
+                )
+                source_word_box = choose_word(
                     snapshot
                 )
 
+                focus_rect = (
+                    int(
+                        round(
+                            cursor_x
+                            - snapshot.cursor_x
+                            + source_word_box.rect.x
+                        )
+                    ),
+                    int(
+                        round(
+                            cursor_y
+                            - snapshot.cursor_y
+                            + source_word_box.rect.y
+                        )
+                    ),
+                    int(
+                        round(
+                            source_word_box.rect.w
+                        )
+                    ),
+                    int(
+                        round(
+                            source_word_box.rect.h
+                        )
+                    ),
+                )
                 t2 = time.perf_counter()
 
                 (
@@ -509,6 +601,8 @@ class TranslatorController(QObject):
                 translated,
                 cursor_x,
                 cursor_y,
+                source_rect,
+                focus_rect,
             )
 
         except Exception as exc:
@@ -540,22 +634,31 @@ class TranslatorController(QObject):
         return f"Ошибка: {exc}"
 
 
-    @Slot(int, str, int, int)
+    @Slot(int, str, int, int, object, object)
     def _on_done(
         self,
         request_id: int,
         text: str,
         x: int,
         y: int,
+        source_rect,
+        focus_rect,
     ) -> None:
         if request_id != self._request_id:
             return
 
         self._busy = False
 
+        print(
+            "HUD SOURCE RECT:",
+            source_rect,
+            flush=True,
+        )
         self.hud.show_message(
             text,
             (x, y),
+            source_rect,
+            focus_rect,
         )
 
 
@@ -579,16 +682,115 @@ class TranslatorController(QObject):
 
 
     def shutdown(self) -> None:
-        self.pipeline.close()
-
         self.pool.shutdown(
-            wait=False,
+            wait=True,
             cancel_futures=True,
         )
 
+        self.pipeline.close()
+
+def ensure_ollama_running() -> None:
+    host = "127.0.0.1"
+    port = 11434
+
+    def server_is_ready() -> bool:
+        try:
+            with socket.create_connection(
+                (host, port),
+                timeout=0.2,
+            ):
+                return True
+
+        except OSError:
+            return False
+
+    if server_is_ready():
+        return
+
+    ollama_exe = (
+        r"C:\Users\erudi\AppData\Local\Programs"
+        r"\Ollama\ollama.exe"
+    )
+
+    subprocess.Popen(
+        [
+            ollama_exe,
+            "serve",
+        ],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        creationflags=subprocess.CREATE_NO_WINDOW,
+    )
+
+    deadline = time.perf_counter() + 10.0
+
+    while time.perf_counter() < deadline:
+        if server_is_ready():
+            return
+
+        time.sleep(0.1)
+
+    raise RuntimeError(
+        "Ollama server did not start within 10 seconds"
+    )
+
+def acquire_single_instance_mutex():
+    kernel32 = ctypes.WinDLL(
+        "kernel32",
+        use_last_error=True,
+    )
+
+    kernel32.CreateMutexW.argtypes = [
+        ctypes.c_void_p,
+        ctypes.c_bool,
+        ctypes.c_wchar_p,
+    ]
+
+    kernel32.CreateMutexW.restype = ctypes.c_void_p
+
+    kernel32.CloseHandle.argtypes = [
+        ctypes.c_void_p,
+    ]
+
+    kernel32.CloseHandle.restype = ctypes.c_bool
+
+    mutex = kernel32.CreateMutexW(
+        None,
+        False,
+        "Local\\LocalScreenTranslator.SingleInstance",
+    )
+
+    if not mutex:
+        raise OSError(
+            ctypes.get_last_error(),
+            "Could not create single-instance mutex",
+        )
+
+    already_running = (
+        ctypes.get_last_error() == 183
+    )
+
+    if already_running:
+        kernel32.CloseHandle(
+            mutex
+        )
+        return None
+
+    return (
+        kernel32,
+        mutex,
+    )
 
 def main() -> int:
     enable_per_monitor_dpi_awareness()
+
+    mutex_data = acquire_single_instance_mutex()
+
+    if mutex_data is None:
+        return 0
+
+    kernel32, mutex = mutex_data
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
@@ -596,6 +798,8 @@ def main() -> int:
     hud = TranslationHUD()
 
     try:
+        ensure_ollama_running()
+
         controller = TranslatorController(hud)
 
     except Exception as exc:
@@ -616,13 +820,141 @@ def main() -> int:
 
     hotkeys.start()
 
+    tray = QSystemTrayIcon()
+
+    tray.setIcon(
+        app.style().standardIcon(
+            QStyle.StandardPixmap.SP_ComputerIcon
+        )
+    )
+
+    tray.setToolTip(
+        "Local Screen Translator"
+    )
+
+    tray_menu = QMenu()
+
+    exit_action = QAction(
+        "Exit",
+        tray
+    )
+
+    tray_menu.addAction(
+        exit_action
+    )
+
+    tray.setContextMenu(
+        tray_menu
+    )
+
+    exit_action.triggered.connect(
+        app.quit
+    )
+
+    tray.show()
+
     def cleanup() -> None:
+        tray.hide()
+
         hotkeys.stop()
+
         controller.shutdown()
 
-    app.aboutToQuit.connect(cleanup)
+        ollama_exe = (
+            r"C:\Users\erudi\AppData\Local\Programs"
+            r"\Ollama\ollama.exe"
+        )
 
-    return app.exec()
+        for model_name in (
+            "qwen3:4b",
+            "riva-en-ru",
+        ):
+            try:
+                subprocess.run(
+                    [
+                        ollama_exe,
+                        "stop",
+                        model_name,
+                    ],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    creationflags=subprocess.CREATE_NO_WINDOW,
+                    timeout=5,
+                    check=False,
+                )
+
+            except Exception:
+                pass
+
+        # Полностью закрываем Ollama server.
+        # ollama stop выгружает модели, но сам сервер не завершает.
+        try:
+            subprocess.run(
+                [
+                    "taskkill",
+                    "/F",
+                    "/T",
+                    "/IM",
+                    "ollama.exe",
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                timeout=5,
+                check=False,
+            )
+
+        except Exception:
+            pass
+        try:
+            subprocess.run(
+                [
+                    "taskkill",
+                    "/F",
+                    "/T",
+                    "/IM",
+                    "ollama app.exe",
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                timeout=5,
+                check=False,
+            )
+
+        except Exception:
+            pass
+        # Страховка на случай оставшегося model runner.
+        try:
+            subprocess.run(
+                [
+                    "taskkill",
+                    "/F",
+                    "/T",
+                    "/IM",
+                    "llama-server.exe",
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                timeout=5,
+                check=False,
+            )
+
+        except Exception:
+            pass
+
+    app.aboutToQuit.connect(
+        cleanup
+    )
+
+    try:
+        return app.exec()
+
+    finally:
+        kernel32.CloseHandle(
+            mutex
+        )
 
 
 if __name__ == "__main__":

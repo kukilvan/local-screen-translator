@@ -686,7 +686,10 @@ def _horizontal_relation(a: Rect, b: Rect) -> bool:
     return overlap_ratio >= 0.12 or left_delta <= 260.0
 
 
-def choose_paragraph(snapshot: OCRSnapshot) -> str:
+def choose_paragraph(
+    snapshot: OCRSnapshot,
+    return_rect: bool = False,
+):
     """
     Collect only the connected visual text block around the cursor.
     Keep PaddleOCR punctuation intact and let the LLM decide sentence boundaries.
@@ -860,6 +863,7 @@ def choose_paragraph(snapshot: OCRSnapshot) -> str:
     )
 
     output_lines: list[str] = []
+    used_lines: list[LineBox] = []
 
     for line in chosen_lines:
         line_text = line.text.strip()
@@ -906,10 +910,26 @@ def choose_paragraph(snapshot: OCRSnapshot) -> str:
             )
 
         output_lines.append(line_text)
+        used_lines.append(line)
 
     result = "\n".join(output_lines).strip()
 
     if not result:
-        raise RuntimeError("Не удалось собрать текст рядом с курсором.")
+        raise RuntimeError(
+            "Не удалось собрать текст рядом с курсором."
+        )
+
+    if return_rect:
+        paragraph_rect = _union_rect(
+            [
+                line.rect
+                for line in used_lines
+            ]
+        )
+
+        return (
+            result[:5000],
+            paragraph_rect,
+        )
 
     return result[:5000]

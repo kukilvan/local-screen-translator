@@ -17,7 +17,7 @@ class AlignClient:
 
         worker_script = project_dir / "align_worker.py"
 
-        creationflags = 0
+        creationflags = subprocess.CREATE_NO_WINDOW
 
         self.process = subprocess.Popen(
         [

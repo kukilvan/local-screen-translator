@@ -1,5 +1,5 @@
 import re
-import time
+
 import requests
 
 from align_client import AlignClient
@@ -90,11 +90,11 @@ class TranslationPipeline:
         target_word: str,
         target_occurrence: int = 0,
     ):
-        timing_start = time.perf_counter()
+
 
         translation = self.translate(text)
 
-        timing_riva = time.perf_counter()
+
 
         logic_result = self.logic.resolve(
             source=text,
@@ -102,7 +102,7 @@ class TranslationPipeline:
             sentence_translation=translation,
         )
 
-        timing_logic = time.perf_counter()
+
 
         source_span = logic_result["source_span"]
 
@@ -137,14 +137,6 @@ class TranslationPipeline:
         target_index = matching_indices[
             target_occurrence
         ]
-        print(
-            "TARGET OCCURRENCE:",
-            repr(target_word),
-            f"#{target_occurrence + 1}",
-            "token_index=",
-            target_index,
-            flush=True,
-        )
 
         if target_index is None:
             raise ValueError(
@@ -244,16 +236,9 @@ class TranslationPipeline:
         target_phrase = " ".join(
             target_words
         )
-        timing_align = time.perf_counter()
 
-        print(
-            f"PIPELINE TIMING: "
-            f"Riva={timing_riva - timing_start:.3f}s | "
-            f"Logic={timing_logic - timing_riva:.3f}s | "
-            f"SimAlign={timing_align - timing_logic:.3f}s | "
-            f"TOTAL={timing_align - timing_start:.3f}s",
-            flush=True,
-        )
+
+
 
         return {
             "source_text": text,
@@ -272,29 +257,3 @@ class TranslationPipeline:
         self.aligner.close()
 
 
-if __name__ == "__main__":
-    pipeline = TranslationPipeline()
-
-    try:
-        result = pipeline.translate_with_alignment(
-            "She shrugged.",
-            "shrugged",
-        )
-
-        print("SOURCE:")
-        print(result["source_text"])
-
-        print("\nTRANSLATION:")
-        print(result["translation"])
-
-        print("\nTARGET:")
-        print(
-            f'{result["source_word"]} -> '
-            f'{result["target_phrase"]}'
-        )
-
-        print("\nTARGET INDICES:")
-        print(result["target_indices"])
-
-    finally:
-        pipeline.close()

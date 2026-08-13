@@ -102,32 +102,3 @@ class AlignClient:
             self.process.kill()
 
 
-if __name__ == "__main__":
-    client = AlignClient()
-
-    try:
-        result = client.align(
-            src=[
-                "She",
-                "shrugged",
-                ".",
-            ],
-            trg=[
-                "Она",
-                "пожала",
-                "плечами",
-                ".",
-            ],
-            target_index=1,
-        )
-
-        print(
-            json.dumps(
-                result,
-                ensure_ascii=False,
-                indent=2,
-            )
-        )
-
-    finally:
-        client.close()

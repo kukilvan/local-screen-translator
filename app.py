@@ -248,41 +248,11 @@ class TranslatorController(QObject):
                             (cursor_x, cursor_y)
                         )
 
-                        print(
-                            "WORD CURSOR LOCAL:",
-                            f"x={snapshot.cursor_x:.1f}",
-                            f"y={snapshot.cursor_y:.1f}",
-                            flush=True,
-                        )
 
-                        print(
-                            "WORD NEAR BOXES:",
-                            flush=True,
-                        )
-
-                        for debug_word in snapshot.words:
-                            if (
-                                abs(debug_word.rect.cx - snapshot.cursor_x) <= 160
-                                and abs(debug_word.rect.cy - snapshot.cursor_y) <= 80
-                            ):
-                                print(
-                                    f"  {debug_word.text!r} | "
-                                    f"x={debug_word.rect.x:.1f} "
-                                    f"y={debug_word.rect.y:.1f} "
-                                    f"w={debug_word.rect.w:.1f} "
-                                    f"h={debug_word.rect.h:.1f} "
-                                    f"cx={debug_word.rect.cx:.1f} "
-                                    f"cy={debug_word.rect.cy:.1f}",
-                                    flush=True,
-                                )
 
                         target = choose_word(snapshot)
 
-                        print(
-                            "WORD CHOSEN:",
-                            repr(target.text),
-                            flush=True,
-                        )
+
 
                         source_rect = (
                         int(
@@ -380,51 +350,13 @@ class TranslatorController(QObject):
                     f"{source_span} → {dictionary_translation}"
                 )
 
-                print(
-                    "WORD SOURCE:",
-                    repr(context),
-                    flush=True,
-                )
 
-                print(
-                    "WORD TARGET:",
-                    repr(target.text),
-                    flush=True,
-                )
 
-                print(
-                    "WORD SENTENCE RIVA:",
-                    repr(sentence_translation),
-                    flush=True,
-                )
 
-                print(
-                    "WORD EXPRESSION:",
-                    repr(source_span),
-                    flush=True,
-                )
 
-                print(
-                    "WORD DICTIONARY:",
-                    repr(dictionary_translation),
-                    flush=True,
-                )
 
-                print(
-                    "WORD LOGIC USED:",
-                    logic_used,
-                    flush=True,
-                )
 
-                print(
-                    f"WORD TIMING: "
-                    f"OCR={t1 - t0:.3f}s | "
-                    f"prepare={t2 - t1:.3f}s | "
-                    f"Riva={t3 - t2:.3f}s | "
-                    f"Logic={t4 - t3:.3f}s | "
-                    f"TOTAL={t4 - t0:.3f}s",
-                    flush=True,
-                )
+
             elif mode == "paragraph":
                 t0 = time.perf_counter()
 
@@ -434,25 +366,11 @@ class TranslatorController(QObject):
 
                 t1 = time.perf_counter()
 
-                print(
-                    "\nRAW OCR LINES:",
-                    flush=True,
-                )
 
-                for i, line in enumerate(snapshot.lines):
-                    print(
-                        f"{i}: {line.text!r} | "
-                        f"x={line.rect.x:.1f} "
-                        f"y={line.rect.y:.1f} "
-                        f"w={line.rect.w:.1f} "
-                        f"h={line.rect.h:.1f}",
-                        flush=True,
-                    )
 
-                print(
-                    "",
-                    flush=True,
-                )
+
+
+
 
                 (
                     marked_paragraph,
@@ -529,17 +447,7 @@ class TranslatorController(QObject):
                     marked_paragraph
                 )
 
-                print(
-                    "PARAGRAPH SOURCE:",
-                    repr(paragraph),
-                    flush=True,
-                )
 
-                print(
-                    "CURSOR WORD:",
-                    repr(target_word),
-                    flush=True,
-                )
 
                 t3 = time.perf_counter()
 
@@ -556,21 +464,7 @@ class TranslatorController(QObject):
                 target_indices = result["target_indices"]
                 target_phrase = result["target_phrase"]
 
-                print(
-                    "RIVA TRANSLATION:",
-                    repr(translated),
-                    flush=True,
-                )
 
-                print(
-                    "SIMALIGN:",
-                    repr(target_word),
-                    "->",
-                    repr(target_phrase),
-                    "indices=",
-                    target_indices,
-                    flush=True,
-                )
 
                 if target_indices:
                     translated = insert_cursor_markers_by_token_indices(
@@ -578,18 +472,9 @@ class TranslatorController(QObject):
                         target_indices,
                     )
 
-                t5 = time.perf_counter()
 
-                print(
-                    f"TIMING: "
-                    f"capture+OCR={t1 - t0:.3f}s | "
-                    f"choose={t2 - t1:.3f}s | "
-                    f"marker_parse={t3 - t2:.3f}s | "
-                    f"Riva+SimAlign={t4 - t3:.3f}s | "
-                    f"prepare_HUD={t5 - t4:.3f}s | "
-                    f"TOTAL={t5 - t0:.3f}s",
-                    flush=True,
-                )
+
+
 
             else:
                 raise ValueError(
@@ -649,11 +534,7 @@ class TranslatorController(QObject):
 
         self._busy = False
 
-        print(
-            "HUD SOURCE RECT:",
-            source_rect,
-            flush=True,
-        )
+
         self.hud.show_message(
             text,
             (x, y),

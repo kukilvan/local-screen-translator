@@ -60,18 +60,9 @@ class OllamaClient:
             )
             response.raise_for_status()
             data = response.json()
-            ns = 1_000_000_000
 
-            print(
-                "OLLAMA TIMING: "
-                f"load={data.get('load_duration', 0) / ns:.3f}s | "
-                f"prompt={data.get('prompt_eval_duration', 0) / ns:.3f}s "
-                f"({data.get('prompt_eval_count', 0)} tok) | "
-                f"generate={data.get('eval_duration', 0) / ns:.3f}s "
-                f"({data.get('eval_count', 0)} tok) | "
-                f"total={data.get('total_duration', 0) / ns:.3f}s",
-                flush=True,
-            )
+
+
         except requests.RequestException as exc:
             raise OllamaError(
                 "Не удалось обратиться к локальной Ollama на 127.0.0.1:11434. "

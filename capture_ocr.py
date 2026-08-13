@@ -476,7 +476,7 @@ class ScreenOCR:
     def snapshot_word_region(
         self, cursor_global: tuple[int, int] | None = None
     ) -> OCRSnapshot:
-        t0 = time.perf_counter()
+
 
         frame, cursor = self._capture_around_cursor(
             SETTINGS.word_roi_width,
@@ -484,7 +484,7 @@ class ScreenOCR:
             cursor_global=cursor_global,
         )
 
-        t1 = time.perf_counter()
+
 
         snapshot = self._recognize(
             frame,
@@ -492,21 +492,16 @@ class ScreenOCR:
             det_limit_side_len=960,
         )
 
-        t2 = time.perf_counter()
 
-        print(
-            f"WORD OCR TIMING: capture={t1-t0:.3f}s | "
-            f"paddle={t2-t1:.3f}s | "
-            f"total={t2-t0:.3f}s",
-            flush=True,
-        )
+
+
 
         return snapshot
 
     def snapshot_paragraph_region(
         self, cursor_global: tuple[int, int] | None = None
     ) -> OCRSnapshot:
-        t0 = time.perf_counter()
+
 
         frame, cursor = self._capture_around_cursor(
             SETTINGS.paragraph_roi_width,
@@ -514,7 +509,7 @@ class ScreenOCR:
             cursor_global=cursor_global,
         )
 
-        t1 = time.perf_counter()
+
 
         snapshot = self._recognize(
             frame,
@@ -522,14 +517,9 @@ class ScreenOCR:
             det_limit_side_len=1536,
         )
 
-        t2 = time.perf_counter()
 
-        print(
-            f"OCR TIMING: capture={t1-t0:.3f}s | "
-            f"paddle={t2-t1:.3f}s | "
-            f"total={t2-t0:.3f}s",
-            flush=True,
-        )
+
+
 
         return snapshot
 

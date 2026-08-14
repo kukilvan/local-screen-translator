@@ -55,7 +55,6 @@ _add_nvidia_dll_directories()
 
 import re
 import time
-import asyncio
 import ctypes
 import ctypes.wintypes as wintypes
 from dataclasses import dataclass
@@ -70,11 +69,6 @@ import dxcam
 import numpy as np
 
 from config import SETTINGS
-
-from winrt.windows.globalization import Language
-from winrt.windows.graphics.imaging import BitmapPixelFormat, SoftwareBitmap
-from winrt.windows.media.ocr import OcrEngine
-from winrt.windows.storage.streams import DataWriter
 
 
 @dataclass(frozen=True)
@@ -152,8 +146,7 @@ def _union_rect(rects: Iterable[Rect]) -> Rect:
     return Rect(left, top, right - left, bottom - top)
 
 
-async def _await_winrt(awaitable):
-    return await awaitable
+
 
 
 class ScreenOCR:
@@ -166,19 +159,6 @@ class ScreenOCR:
     """
 
     def __init__(self) -> None:
-        lang = Language(SETTINGS.ocr_language)
-        if not OcrEngine.is_language_supported(lang):
-            raise RuntimeError(
-                f"Windows OCR language {SETTINGS.ocr_language!r} is not installed. "
-                "Run install_ocr_en.ps1 as Administrator or install the OCR "
-                "language capability in Windows Settings."
-            )
-
-        self.engine = OcrEngine.try_create_from_language(lang)
-        if self.engine is None:
-            raise RuntimeError(
-                f"Windows OCR could not create an engine for {SETTINGS.ocr_language!r}."
-            )
 
         self.paddle = PaddleOCR(
             text_detection_model_name="PP-OCRv6_small_det",

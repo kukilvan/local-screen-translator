@@ -1,6 +1,58 @@
 from __future__ import annotations
 import os
+import sys
+
 os.environ["FLAGS_enable_pir_api"] = "0"
+
+_NVIDIA_DLL_HANDLES = []
+
+
+def _add_nvidia_dll_directories() -> None:
+    nvidia_root = os.path.join(
+        sys.prefix,
+        "Lib",
+        "site-packages",
+        "nvidia",
+    )
+
+    dll_dirs = [
+        os.path.join(
+            nvidia_root,
+            "cu13",
+            "bin",
+            "x86_64",
+        ),
+    ]
+
+    cudnn_root = os.path.join(
+        nvidia_root,
+        "cudnn",
+    )
+
+    if os.path.isdir(cudnn_root):
+        for root, _, files in os.walk(cudnn_root):
+            if "cudnn64_9.dll" in files:
+                dll_dirs.append(root)
+                break
+
+    for dll_dir in dll_dirs:
+        if not os.path.isdir(dll_dir):
+            continue
+
+        _NVIDIA_DLL_HANDLES.append(
+            os.add_dll_directory(dll_dir)
+        )
+
+        os.environ["PATH"] = (
+            dll_dir
+            + os.pathsep
+            + os.environ.get("PATH", "")
+        )
+
+
+
+_add_nvidia_dll_directories()
+
 import re
 import time
 import asyncio

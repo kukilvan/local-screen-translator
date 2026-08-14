@@ -6,7 +6,14 @@ import threading
 
 from PySide6.QtCore import QObject, Signal
 
-from config import SETTINGS
+from config import (
+    MOD_ALT,
+    MOD_CONTROL,
+    MOD_NOREPEAT,
+    MOD_SHIFT,
+    SETTINGS,
+)
+from user_settings import USER_SETTINGS
 
 
 WM_HOTKEY = 0x0312
@@ -14,6 +21,81 @@ WM_QUIT = 0x0012
 
 HOTKEY_WORD = 1
 HOTKEY_PARAGRAPH = 2
+def parse_hotkey(
+    hotkey: str,
+) -> tuple[int, int]:
+    parts = [
+        part.strip().lower()
+        for part in hotkey.split("+")
+        if part.strip()
+    ]
+
+    modifiers = MOD_NOREPEAT
+    key_vk = None
+
+    for part in parts:
+        if part in (
+            "ctrl",
+            "control",
+        ):
+            modifiers |= MOD_CONTROL
+
+        elif part == "alt":
+            modifiers |= MOD_ALT
+
+        elif part == "shift":
+            modifiers |= MOD_SHIFT
+
+        elif part == "space":
+            key_vk = 0x20
+
+        elif (
+            len(part) == 1
+            and "a" <= part <= "z"
+        ):
+            key_vk = ord(
+                part.upper()
+            )
+
+        elif (
+            len(part) == 1
+            and "0" <= part <= "9"
+        ):
+            key_vk = ord(part)
+
+        elif (
+            part.startswith("f")
+            and part[1:].isdigit()
+        ):
+            function_number = int(
+                part[1:]
+            )
+
+            if not 1 <= function_number <= 24:
+                raise ValueError(
+                    f"Unsupported hotkey: {hotkey}"
+                )
+
+            key_vk = (
+                0x70
+                + function_number
+                - 1
+            )
+
+        else:
+            raise ValueError(
+                f"Unsupported hotkey: {hotkey}"
+            )
+
+    if key_vk is None:
+        raise ValueError(
+            f"Hotkey has no key: {hotkey}"
+        )
+
+    return (
+        modifiers,
+        key_vk,
+    )
 
 
 class POINT(ctypes.Structure):
@@ -58,6 +140,7 @@ class GlobalHotkeys(QObject):
 
     def stop(self) -> None:
         self._stop_requested.set()
+
         if self._thread_id is not None:
             ctypes.windll.user32.PostThreadMessageW(
                 self._thread_id,
@@ -66,25 +149,53 @@ class GlobalHotkeys(QObject):
                 0,
             )
 
+        if (
+            self._thread is not None
+            and self._thread is not threading.current_thread()
+        ):
+            self._thread.join(
+                timeout=2.0
+            )
+
+        self._thread = None
+
+    def restart(self) -> None:
+        self.stop()
+        self.start()
+
     def _message_loop(self) -> None:
         user32 = ctypes.windll.user32
         kernel32 = ctypes.windll.kernel32
         self._thread_id = int(kernel32.GetCurrentThreadId())
 
+        (
+            word_hotkey_mods,
+            word_hotkey_vk,
+        ) = parse_hotkey(
+            USER_SETTINGS.word_hotkey
+        )
+
         registered_word = bool(
             user32.RegisterHotKey(
                 None,
                 HOTKEY_WORD,
-                SETTINGS.word_hotkey_mods,
-                SETTINGS.hotkey_vk,
+                word_hotkey_mods,
+                word_hotkey_vk,
             )
         )
+        (
+            paragraph_hotkey_mods,
+            paragraph_hotkey_vk,
+        ) = parse_hotkey(
+            USER_SETTINGS.paragraph_hotkey
+        )
+
         registered_paragraph = bool(
             user32.RegisterHotKey(
                 None,
                 HOTKEY_PARAGRAPH,
-                SETTINGS.paragraph_hotkey_mods,
-                SETTINGS.hotkey_vk,
+                paragraph_hotkey_mods,
+                paragraph_hotkey_vk,
             )
         )
 

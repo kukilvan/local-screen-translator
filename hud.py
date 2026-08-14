@@ -9,6 +9,7 @@ from PySide6.QtGui import QCursor, QGuiApplication
 from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 from config import SETTINGS
+from user_settings import USER_SETTINGS
 
 class SourceHighlight(QWidget):
     def __init__(self) -> None:
@@ -716,5 +717,5 @@ class TranslationHUD(QWidget):
         self._mouse_was_down = self._any_mouse_button_down()
         self._click_watch.start()
         self._auto_hide.start(
-            SETTINGS.hud_auto_hide_ms
+            USER_SETTINGS.hud_auto_hide_ms
         )

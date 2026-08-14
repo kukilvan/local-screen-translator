@@ -9,7 +9,8 @@ from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMenu, QStyle, QSystemTrayIcon
 import time
 from concurrent.futures import ThreadPoolExecutor
-
+from settings_dialog import SettingsDialog
+from user_settings import USER_SETTINGS
 from PySide6.QtCore import QObject, Signal, Slot, QTimer
 from PySide6.QtWidgets import QApplication
 
@@ -715,6 +716,29 @@ def main() -> int:
 
     tray_menu = QMenu()
 
+    settings_action = QAction(
+        "Settings...",
+        tray
+    )
+
+    tray_menu.addAction(
+        settings_action
+    )
+    def open_settings() -> None:
+        dialog = SettingsDialog()
+
+        dialog.settings_saved.connect(
+            hotkeys.restart
+        )
+
+        dialog.exec()
+
+    settings_action.triggered.connect(
+        open_settings
+    )
+
+    tray_menu.addSeparator()
+
     exit_action = QAction(
         "Exit",
         tray
@@ -733,6 +757,12 @@ def main() -> int:
     )
 
     tray.show()
+
+    if not USER_SETTINGS.first_run_completed:
+        QTimer.singleShot(
+            0,
+            open_settings,
+        )
 
     def cleanup() -> None:
         tray.hide()

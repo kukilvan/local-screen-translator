@@ -1,11 +1,24 @@
 @echo off
-cd /d C:\local_screen_translator\local_screen_translator
+cd /d "%~dp0"
+
+set "OLLAMA_EXE=%LOCALAPPDATA%\Programs\Ollama\ollama.exe"
+
 netstat -ano | findstr ":11434" | findstr "LISTENING" >nul
+
 if errorlevel 1 (
+    if not exist "%OLLAMA_EXE%" (
+        echo Ollama not found:
+        echo %OLLAMA_EXE%
+        pause
+        exit /b 1
+    )
+
     echo Starting Ollama...
-    start "" /min "C:\Users\erudi\AppData\Local\Programs\Ollama\ollama.exe" serve
+    start "" /min "%OLLAMA_EXE%" serve
     timeout /t 2 /nobreak >nul
 )
+
 echo Starting Local Screen Translator...
 ".venv\Scripts\python.exe" app.py
+
 pause

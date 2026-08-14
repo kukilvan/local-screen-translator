@@ -2,6 +2,7 @@ from __future__ import annotations
 import traceback
 import ctypes
 import re
+import os
 import sys
 import subprocess
 import socket
@@ -610,11 +611,12 @@ def ensure_ollama_running() -> None:
     if server_is_ready():
         return
 
-    ollama_exe = (
-        r"C:\Users\erudi\AppData\Local\Programs"
-        r"\Ollama\ollama.exe"
-    )
-
+        ollama_exe = os.path.join(
+            os.environ["LOCALAPPDATA"],
+            "Programs",
+            "Ollama",
+            "ollama.exe",
+        )
     subprocess.Popen(
         [
             ollama_exe,
@@ -792,14 +794,16 @@ def main() -> int:
 
         controller.shutdown()
 
-        ollama_exe = (
-            r"C:\Users\erudi\AppData\Local\Programs"
-            r"\Ollama\ollama.exe"
+        ollama_exe = os.path.join(
+            os.environ["LOCALAPPDATA"],
+            "Programs",
+            "Ollama",
+            "ollama.exe",
         )
 
         for model_name in (
             "qwen3:4b",
-            "riva-en-ru",
+            "riva-translate",
         ):
             try:
                 subprocess.run(

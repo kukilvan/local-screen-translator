@@ -126,30 +126,50 @@ def insert_cursor_markers_by_token_indices(
     text: str,
     token_indices: list[int],
 ) -> str:
-    """
-    Surround the full SimAlign target span with HUD markers.
-
-    Example:
-        Она пожала плечами.
-            ↓
-        Она <<<CURSOR>>>пожала плечами<<<END_CURSOR>>>.
-    """
     if not token_indices:
         return text
 
-    matches = list(TOKEN_RE.finditer(text))
+    matches = list(
+        TOKEN_RE.finditer(text)
+    )
 
-    start_index = min(token_indices)
-    end_index = max(token_indices)
+    indices = sorted(
+        set(token_indices)
+    )
 
-    if (
-        start_index < 0
-        or end_index >= len(matches)
+    if any(
+        index < 0
+        or index >= len(matches)
+        for index in indices
     ):
         return text
 
-    start_pos = matches[start_index].start()
-    end_pos = matches[end_index].end()
+    start_index = indices[0]
+    end_index = indices[-1]
+
+    span_length = (
+        end_index
+        - start_index
+        + 1
+    )
+
+    if span_length > 4:
+        return text
+
+    for previous, current in zip(
+        indices,
+        indices[1:],
+    ):
+        if current - previous > 2:
+            return text
+
+    start_pos = matches[
+        start_index
+    ].start()
+
+    end_pos = matches[
+        end_index
+    ].end()
 
     return (
         text[:start_pos]
@@ -319,6 +339,7 @@ class TranslatorController(QObject):
                         source=context,
                         target_word=target.text,
                         sentence_translation=sentence_translation,
+                        target_language=USER_SETTINGS.target_language,
                     )
 
                     source_span = logic_result["source_span"]

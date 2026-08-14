@@ -18,6 +18,7 @@ from autostart import (
     is_autostart_enabled,
     set_autostart,
 )
+from languages import SUPPORTED_LANGUAGES
 from user_settings import (
     USER_SETTINGS,
     save_user_settings,
@@ -47,10 +48,14 @@ class SettingsDialog(QDialog):
 
         self.language_combo = QComboBox()
 
-        self.language_combo.addItem(
-            "Russian",
-            "Russian",
-        )
+        for (
+            language_name,
+            language_code,
+        ) in SUPPORTED_LANGUAGES:
+            self.language_combo.addItem(
+                language_name,
+                language_name,
+            )
 
         language_index = (
             self.language_combo.findData(

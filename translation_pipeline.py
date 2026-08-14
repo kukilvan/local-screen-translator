@@ -5,12 +5,14 @@ import requests
 from align_client import AlignClient
 from logic_bridge import LogicBridge
 
+from user_settings import USER_SETTINGS
+
 
 class TranslationPipeline:
     def __init__(
         self,
         ollama_url="http://127.0.0.1:11434/api/generate",
-        model="riva-en-ru",
+        model="riva-translate",
     ):
         self.ollama_url = ollama_url
         self.model = model
@@ -28,11 +30,26 @@ class TranslationPipeline:
         )
 
     def translate(self, text: str) -> str:
+        target_language = (
+            USER_SETTINGS.target_language
+        )
+
+        system_prompt = (
+            "You are an expert at translating text "
+            f"from English to {target_language}."
+        )
+
+        translation_prompt = (
+            f"What is the {target_language} translation "
+            f"of the sentence: {text}"
+        )
+
         response = requests.post(
             self.ollama_url,
             json={
                 "model": self.model,
-                "prompt": text,
+                "system": system_prompt,
+                "prompt": translation_prompt,
                 "stream": False,
                 "keep_alive": "10m",
             },
@@ -45,42 +62,66 @@ class TranslationPipeline:
 
     @staticmethod
     def _choose_alignment(alignments):
-        """
-        Выбираем наиболее надёжные target indices.
+        def clean_indices(indices):
+            indices = sorted(
+                set(indices)
+            )
 
-        1. Если >= 2 методов согласны по каждому индексу,
-           используем эти индексы.
-        2. Если такого нет — пробуем inter.
-        3. Потом itermax.
-        4. Потом mwmf.
-        """
+            if not indices:
+                return []
+
+            max_tokens = 4
+            max_span = 5
+
+            if len(indices) > max_tokens:
+                return []
+
+            if (
+                indices[-1]
+                - indices[0]
+                > max_span
+            ):
+                return []
+
+            return indices
 
         votes = {}
 
         for data in alignments.values():
             for index in data["indices"]:
-                votes[index] = votes.get(index, 0) + 1
+                votes[index] = (
+                    votes.get(index, 0)
+                    + 1
+                )
 
-        consensus = sorted(
-            index
-            for index, count in votes.items()
-            if count >= 2
+        consensus = clean_indices(
+            [
+                index
+                for index, count in votes.items()
+                if count >= 2
+            ]
         )
 
         if consensus:
             return consensus
 
-        for method in ("inter", "itermax", "mwmf"):
-            indices = alignments.get(
-                method,
-                {},
-            ).get(
-                "indices",
-                [],
+        for method in (
+            "inter",
+            "itermax",
+            "mwmf",
+        ):
+            indices = clean_indices(
+                alignments.get(
+                    method,
+                    {},
+                ).get(
+                    "indices",
+                    [],
+                )
             )
 
             if indices:
-                return sorted(indices)
+                return indices
 
         return []
 
@@ -100,6 +141,7 @@ class TranslationPipeline:
             source=text,
             target_word=target_word,
             sentence_translation=translation,
+            target_language=USER_SETTINGS.target_language,
         )
 
 

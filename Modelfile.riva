@@ -1,9 +1,9 @@
-FROM hf.co/liodon-ai/Riva-Translate-4B-Instruct-v2-imatrix-GGUF:Q6_K
+FROM riva-en-ru:latest
 
 TEMPLATE """<s>System
-You are an expert at translating text from English to Russian.</s>
+{{ .System }}</s>
 <s>User
-What is the Russian translation of the sentence: {{ .Prompt }}</s>
+{{ .Prompt }}</s>
 <s>Assistant
 {{ .Response }}"""
 

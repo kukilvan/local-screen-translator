@@ -35,9 +35,13 @@ class LogicBridge:
             "additionalProperties": False,
         }
 
-        self.system_prompt = """
-You produce a contextual Russian dictionary translation for a word
-selected by the user.
+    @staticmethod
+    def _build_system_prompt(
+        target_language: str,
+    ) -> str:
+        return f"""
+You produce a contextual {target_language} dictionary translation
+for a word selected by the user.
 
 You receive:
 
@@ -48,7 +52,7 @@ TARGET_WORD:
 The exact English word selected by the user.
 
 SENTENCE_TRANSLATION:
-A correct Russian translation of SOURCE.
+A correct {target_language} translation of SOURCE.
 
 Return:
 - source_span
@@ -65,47 +69,14 @@ source_span rules:
 
 translation rules:
 - Translate source_span according to its meaning in SOURCE.
-- Return a Russian dictionary-style translation, not the whole sentence.
+- Return a {target_language} dictionary-style translation,
+  not the whole sentence.
 - Use SENTENCE_TRANSLATION as semantic evidence.
-- The Russian equivalent may be implicit rather than literally present
+- The equivalent may be implicit rather than literally present
   as one word in SENTENCE_TRANSLATION.
-- Prefer dictionary form:
-  noun -> nominative singular
-  verb -> infinitive
-  adjective -> base masculine singular form.
-- Preserve a multiword Russian expression when required.
-
-Examples:
-
-SOURCE:
-He gave up immediately.
-TARGET_WORD:
-up
-SENTENCE_TRANSLATION:
-Он сразу же отказался.
-RESULT:
-source_span = gave up
-translation = отказаться
-
-SOURCE:
-She shrugged and walked away.
-TARGET_WORD:
-shrugged
-SENTENCE_TRANSLATION:
-Она пожала плечами и ушла.
-RESULT:
-source_span = shrugged
-translation = пожать плечами
-
-SOURCE:
-Not even a groan?
-TARGET_WORD:
-groan
-SENTENCE_TRANSLATION:
-Ни одного стона?
-RESULT:
-source_span = groan
-translation = стон
+- Prefer the normal dictionary form used in {target_language}.
+- Preserve a multiword expression when required.
+- Return only the translation in {target_language}.
 """.strip()
 
     def resolve(
@@ -113,6 +84,7 @@ translation = стон
         source: str,
         target_word: str,
         sentence_translation: str,
+        target_language: str = "Russian",
     ) -> dict[str, str]:
         user_prompt = f"""
 SOURCE:
@@ -132,7 +104,9 @@ SENTENCE_TRANSLATION:
                 "messages": [
                     {
                         "role": "system",
-                        "content": self.system_prompt,
+                        "content": self._build_system_prompt(
+                            target_language
+                        ),
                     },
                     {
                         "role": "user",

@@ -611,12 +611,12 @@ def ensure_ollama_running() -> None:
     if server_is_ready():
         return
 
-        ollama_exe = os.path.join(
-            os.environ["LOCALAPPDATA"],
-            "Programs",
-            "Ollama",
-            "ollama.exe",
-        )
+    ollama_exe = os.path.join(
+        os.environ["LOCALAPPDATA"],
+        "Programs",
+        "Ollama",
+        "ollama.exe",
+    )
     subprocess.Popen(
         [
             ollama_exe,

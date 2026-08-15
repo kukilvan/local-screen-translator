@@ -6,7 +6,7 @@ import os
 import sys
 import subprocess
 import socket
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QMenu, QStyle, QSystemTrayIcon
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -772,8 +772,22 @@ def main() -> int:
 
     tray = QSystemTrayIcon()
 
+    icon_path = os.path.join(
+        os.path.dirname(
+            sys.executable
+            if getattr(sys, "frozen", False)
+            else os.path.abspath(__file__)
+        ),
+        "app.ico",
+    )
+
+    app_icon = QIcon(icon_path)
+    app.setWindowIcon(app_icon)
+
     tray.setIcon(
-        app.style().standardIcon(
+        app_icon
+        if not app_icon.isNull()
+        else app.style().standardIcon(
             QStyle.StandardPixmap.SP_ComputerIcon
         )
     )
@@ -899,3 +913,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

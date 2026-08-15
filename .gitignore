@@ -14,3 +14,4 @@ release_build/
 backup_*/
 *.backup_*
 *.bak_*
+UI_TEXT_AUDIT.txt

@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import traceback
 import ctypes
 import re
@@ -12,6 +12,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from settings_dialog import SettingsDialog
 from user_settings import USER_SETTINGS
+from ui_i18n import t
 from PySide6.QtCore import QObject, Signal, Slot, QTimer
 from PySide6.QtWidgets import QApplication
 
@@ -799,7 +800,7 @@ def main() -> int:
     tray_menu = QMenu()
 
     settings_action = QAction(
-        "Settings...",
+        t("tray_settings"),
         tray
     )
 
@@ -815,6 +816,13 @@ def main() -> int:
 
         dialog.exec()
 
+        settings_action.setText(
+            t("tray_settings")
+        )
+        exit_action.setText(
+            t("tray_exit")
+        )
+
     settings_action.triggered.connect(
         open_settings
     )
@@ -822,7 +830,7 @@ def main() -> int:
     tray_menu.addSeparator()
 
     exit_action = QAction(
-        "Exit",
+        t("tray_exit"),
         tray
     )
 
@@ -913,4 +921,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QKeySequence
@@ -19,6 +19,7 @@ from autostart import (
     set_autostart,
 )
 from languages import SUPPORTED_LANGUAGES
+from ui_i18n import UI_LANGUAGES, t
 from user_settings import (
     USER_SETTINGS,
     save_user_settings,
@@ -35,7 +36,7 @@ class SettingsDialog(QDialog):
         super().__init__(parent)
 
         self.setWindowTitle(
-            "Local Screen Translator - Settings"
+            t("settings_title")
         )
 
         self.setMinimumWidth(420)
@@ -45,6 +46,28 @@ class SettingsDialog(QDialog):
         )
 
         form_layout = QFormLayout()
+
+        self.ui_language_combo = QComboBox()
+
+        for language_code, language_name in UI_LANGUAGES:
+            self.ui_language_combo.addItem(
+                language_name,
+                language_code,
+            )
+
+        ui_language_index = self.ui_language_combo.findData(
+            USER_SETTINGS.ui_language
+        )
+
+        if ui_language_index >= 0:
+            self.ui_language_combo.setCurrentIndex(
+                ui_language_index
+            )
+
+        form_layout.addRow(
+            t("interface_language"),
+            self.ui_language_combo,
+        )
 
         self.language_combo = QComboBox()
 
@@ -69,7 +92,7 @@ class SettingsDialog(QDialog):
             )
 
         form_layout.addRow(
-            "Translation language:",
+            t("translation_language"),
             self.language_combo,
         )
 
@@ -82,7 +105,7 @@ class SettingsDialog(QDialog):
         )
 
         form_layout.addRow(
-            "Word hotkey:",
+            t("word_hotkey"),
             self.word_hotkey_edit,
         )
 
@@ -95,7 +118,7 @@ class SettingsDialog(QDialog):
         )
 
         form_layout.addRow(
-            "Paragraph hotkey:",
+            t("paragraph_hotkey"),
             self.paragraph_hotkey_edit,
         )
 
@@ -107,7 +130,7 @@ class SettingsDialog(QDialog):
         )
 
         self.hud_timeout_spin.setSuffix(
-            " sec"
+            t("seconds")
         )
 
         self.hud_timeout_spin.setValue(
@@ -118,12 +141,12 @@ class SettingsDialog(QDialog):
         )
 
         form_layout.addRow(
-            "HUD auto-hide:",
+            t("hud_auto_hide"),
             self.hud_timeout_spin,
         )
 
         self.autostart_checkbox = QCheckBox(
-            "Start Local Screen Translator with Windows"
+            t("autostart")
         )
 
         self.autostart_checkbox.setChecked(
@@ -138,24 +161,28 @@ class SettingsDialog(QDialog):
         root_layout.addLayout(
             form_layout
         )
-
-        note = QLabel(
-            "Currently only English → Russian translation "
-            "is supported."
-        )
-
-        note.setWordWrap(
-            True
-        )
-
-        root_layout.addWidget(
-            note
-        )
-
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save
             | QDialogButtonBox.StandardButton.Cancel
         )
+
+        
+        save_button = self.buttons.button(
+            QDialogButtonBox.StandardButton.Save
+        )
+        cancel_button = self.buttons.button(
+            QDialogButtonBox.StandardButton.Cancel
+        )
+
+        if save_button is not None:
+            save_button.setText(
+                t("save")
+            )
+
+        if cancel_button is not None:
+            cancel_button.setText(
+                t("cancel")
+            )
 
         self.buttons.rejected.connect(
             self.reject
@@ -193,6 +220,10 @@ class SettingsDialog(QDialog):
                 paragraph_hotkey
             )
 
+        USER_SETTINGS.ui_language = (
+            self.ui_language_combo.currentData()
+        )
+
         USER_SETTINGS.target_language = (
             self.language_combo.currentData()
         )
@@ -219,3 +250,6 @@ class SettingsDialog(QDialog):
         self.settings_saved.emit()
 
         self.accept()
+
+
+

@@ -16,6 +16,7 @@ SETTINGS_PATH = os.path.join(
 
 @dataclass
 class UserSettings:
+    ui_language: str = "auto"
     target_language: str = "Russian"
 
     word_hotkey: str = "Ctrl+Alt+Space"
@@ -43,6 +44,10 @@ def load_user_settings() -> UserSettings:
         defaults = UserSettings()
 
         return UserSettings(
+            ui_language=raw.get(
+                "ui_language",
+                defaults.ui_language,
+            ),
             target_language=raw.get(
                 "target_language",
                 defaults.target_language,

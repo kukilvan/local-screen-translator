@@ -18,6 +18,7 @@ SETTINGS_PATH = os.path.join(
 class UserSettings:
     ui_language: str = "auto"
     target_language: str = "Russian"
+    tts_voice_id: str = ""
 
     word_hotkey: str = "Ctrl+Alt+Space"
     paragraph_hotkey: str = "Ctrl+Alt+Shift+Space"
@@ -51,6 +52,10 @@ def load_user_settings() -> UserSettings:
             target_language=raw.get(
                 "target_language",
                 defaults.target_language,
+            ),
+            tts_voice_id=raw.get(
+                "tts_voice_id",
+                defaults.tts_voice_id,
             ),
             word_hotkey=raw.get(
                 "word_hotkey",

@@ -372,7 +372,8 @@ class TranslationHUD(QWidget):
             return
 
         speak_english(
-            self._speech_text
+            self._speech_text,
+            USER_SETTINGS.tts_voice_id,
         )
 
     def _apply_win32_noactivate(self) -> None:

@@ -1,5 +1,7 @@
 ﻿from __future__ import annotations
 
+import threading
+
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QKeySequence
 from PySide6.QtWidgets import (
@@ -10,6 +12,7 @@ from PySide6.QtWidgets import (
     QFormLayout,
     QKeySequenceEdit,
     QLabel,
+    QPushButton,
     QSpinBox,
     QVBoxLayout,
 )
@@ -19,7 +22,12 @@ from autostart import (
     set_autostart,
 )
 from languages import SUPPORTED_LANGUAGES
+from speech import get_installed_english_voices
 from ui_i18n import UI_LANGUAGES, t
+from voice_packs import (
+    ENGLISH_VOICE_PACKS,
+    install_voice_pack,
+)
 from user_settings import (
     USER_SETTINGS,
     save_user_settings,
@@ -28,12 +36,17 @@ from user_settings import (
 
 class SettingsDialog(QDialog):
     settings_saved = Signal()
+    voice_install_finished = Signal(object)
 
     def __init__(
         self,
         parent=None,
     ) -> None:
         super().__init__(parent)
+
+        self.voice_install_finished.connect(
+            self._on_voice_install_finished
+        )
 
         self.setWindowTitle(
             t("settings_title")
@@ -94,6 +107,48 @@ class SettingsDialog(QDialog):
         form_layout.addRow(
             t("translation_language"),
             self.language_combo,
+        )
+
+        self.voice_combo = QComboBox()
+        self._refresh_voice_combo()
+
+        form_layout.addRow(
+            t("pronunciation_voice"),
+            self.voice_combo,
+        )
+
+        self.voice_pack_combo = QComboBox()
+
+        for locale, _display_name in ENGLISH_VOICE_PACKS:
+            self.voice_pack_combo.addItem(
+                locale,
+                locale,
+            )
+
+        form_layout.addRow(
+            t("microsoft_voice_pack"),
+            self.voice_pack_combo,
+        )
+
+        self.install_voice_button = QPushButton(
+            t("install_voice_pack")
+        )
+
+        self.install_voice_button.clicked.connect(
+            self._install_selected_voice_pack
+        )
+
+        form_layout.addRow(
+            "",
+            self.install_voice_button,
+        )
+
+        self.voice_install_status = QLabel("")
+        self.voice_install_status.setWordWrap(True)
+
+        form_layout.addRow(
+            "",
+            self.voice_install_status,
         )
 
         self.word_hotkey_edit = QKeySequenceEdit()
@@ -195,6 +250,166 @@ class SettingsDialog(QDialog):
         root_layout.addWidget(
             self.buttons
         )
+    def _refresh_voice_combo(self) -> None:
+        if not hasattr(
+            self,
+            "voice_combo",
+        ):
+            return
+
+        selected_id = (
+            self.voice_combo.currentData()
+            if self.voice_combo.count()
+            else USER_SETTINGS.tts_voice_id
+        )
+
+        selected_id = (
+            selected_id
+            or USER_SETTINGS.tts_voice_id
+            or ""
+        )
+
+        self.voice_combo.clear()
+
+        self.voice_combo.addItem(
+            t("automatic_voice"),
+            "",
+        )
+
+        for voice in get_installed_english_voices():
+            label = (
+                f"{voice['name']} ? "
+                f"{voice['language']} ? "
+                f"{voice['gender']}"
+            )
+
+            self.voice_combo.addItem(
+                label,
+                voice["id"],
+            )
+
+        index = self.voice_combo.findData(
+            selected_id
+        )
+
+        if index < 0:
+            index = 0
+
+        self.voice_combo.setCurrentIndex(
+            index
+        )
+
+    def _install_selected_voice_pack(self) -> None:
+        locale = self.voice_pack_combo.currentData()
+
+        if not locale:
+            return
+
+        self.install_voice_button.setEnabled(
+            False
+        )
+        self.voice_pack_combo.setEnabled(
+            False
+        )
+
+        self.install_voice_button.setText(
+            t("installing_voice_pack")
+        )
+
+        self.voice_install_status.setText(
+            t("installing_voice_pack_status").format(
+                locale=locale
+            )
+        )
+
+        thread = threading.Thread(
+            target=self._voice_install_worker,
+            args=(locale,),
+            daemon=True,
+            name="LST-VoicePackInstaller",
+        )
+
+        thread.start()
+
+    def _voice_install_worker(
+        self,
+        locale: str,
+    ) -> None:
+        try:
+            result = install_voice_pack(
+                locale
+            )
+
+        except Exception as exc:
+            result = {
+                "ok": False,
+                "restart_needed": False,
+                "error": str(exc),
+            }
+
+        result["locale"] = locale
+
+        self.voice_install_finished.emit(
+            result
+        )
+
+    def _on_voice_install_finished(
+        self,
+        result,
+    ) -> None:
+        self.install_voice_button.setEnabled(
+            True
+        )
+        self.voice_pack_combo.setEnabled(
+            True
+        )
+
+        self.install_voice_button.setText(
+            t("install_voice_pack")
+        )
+
+        locale = result.get(
+            "locale",
+            "",
+        )
+
+        if result.get("ok"):
+            self._refresh_voice_combo()
+
+            if result.get(
+                "restart_needed"
+            ):
+                message = t(
+                    "voice_pack_restart"
+                ).format(
+                    locale=locale
+                )
+
+            else:
+                message = t(
+                    "voice_pack_installed"
+                ).format(
+                    locale=locale
+                )
+
+            self.voice_install_status.setText(
+                message
+            )
+
+        else:
+            error = (
+                result.get("error")
+                or "Unknown error"
+            )
+
+            self.voice_install_status.setText(
+                t(
+                    "voice_pack_install_error"
+                ).format(
+                    error=error
+                )
+            )
+
     def _save(self) -> None:
         word_hotkey = (
             self.word_hotkey_edit
@@ -226,6 +441,11 @@ class SettingsDialog(QDialog):
 
         USER_SETTINGS.target_language = (
             self.language_combo.currentData()
+        )
+
+        USER_SETTINGS.tts_voice_id = (
+            self.voice_combo.currentData()
+            or ""
         )
 
         USER_SETTINGS.hud_auto_hide_ms = (

@@ -14,8 +14,8 @@ VK_SPACE = 0x20
 @dataclass(frozen=True)
 class Settings:
     # -------- Ollama --------
-    ollama_url: str = "http://127.0.0.1:11434"
-    ollama_model: str = "qwen2.5:7b-instruct-q4_0"
+    ollama_url: str = "http://127.0.0.1:11435"
+    ollama_model: str = "qwen3:4b"
     target_language: str = "Russian"
     ollama_keep_alive: int | str = -1
     ollama_num_ctx: int = 2048

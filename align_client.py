@@ -1,38 +1,79 @@
-import json
+﻿import json
 import os
 import subprocess
 from pathlib import Path
+
+from runtime_paths import ALIGN_WORKER_EXE, BERT_MODEL_DIR
 
 
 class AlignClient:
     def __init__(self):
         project_dir = Path(__file__).resolve().parent
 
-        python_exe = (
-            project_dir
-            / ".venv-align"
-            / "Scripts"
-            / "python.exe"
-        )
+        if not BERT_MODEL_DIR.is_dir():
+            raise RuntimeError(
+                f"Bundled BERT model not found: {BERT_MODEL_DIR}"
+            )
 
-        worker_script = project_dir / "align_worker.py"
+        # Release path: prefer the standalone PyInstaller worker.
+        if ALIGN_WORKER_EXE.is_file():
+            command = [str(ALIGN_WORKER_EXE)]
+            worker_description = str(ALIGN_WORKER_EXE)
+        else:
+            # Development fallback so the source tree remains usable even
+            # before a release worker has been built/copied.
+            python_exe = (
+                project_dir
+                / ".venv-align"
+                / "Scripts"
+                / "python.exe"
+            )
+            worker_script = project_dir / "align_worker.py"
+
+            if not python_exe.is_file():
+                raise RuntimeError(
+                    "SimAlign runtime not found. "
+                    f"Expected standalone worker at {ALIGN_WORKER_EXE} "
+                    f"or development Python at {python_exe}"
+                )
+
+            if not worker_script.is_file():
+                raise RuntimeError(
+                    f"SimAlign worker script not found: {worker_script}"
+                )
+
+            command = [
+                str(python_exe),
+                "-X",
+                "utf8",
+                str(worker_script),
+            ]
+            worker_description = str(worker_script)
 
         creationflags = subprocess.CREATE_NO_WINDOW
 
+        worker_env = os.environ.copy()
+        worker_env["LST_BERT_MODEL_DIR"] = str(BERT_MODEL_DIR)
+        worker_env["HF_HUB_OFFLINE"] = "1"
+        worker_env["TRANSFORMERS_OFFLINE"] = "1"
+        worker_env["HF_DATASETS_OFFLINE"] = "1"
+
+        # The standalone EXE cannot receive Python's "-X utf8" switch.
+        # Force UTF-8 explicitly so Russian text in the JSON pipe is preserved.
+        worker_env["PYTHONUTF8"] = "1"
+        worker_env["PYTHONIOENCODING"] = "utf-8"
+
         self.process = subprocess.Popen(
-        [
-        str(python_exe),
-        "-X",
-        "utf8",
-        str(worker_script),
-        ],
+            command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
             encoding="utf-8",
+            errors="strict",
             bufsize=1,
             creationflags=creationflags,
+            env=worker_env,
         )
 
         ready_line = self.process.stdout.readline()
@@ -40,7 +81,9 @@ class AlignClient:
         if not ready_line:
             error = self.process.stderr.read()
             raise RuntimeError(
-                f"SimAlign worker failed to start:\n{error}"
+                "SimAlign worker failed to start.\n"
+                f"Worker: {worker_description}\n"
+                f"{error}"
             )
 
         ready = json.loads(ready_line)
@@ -65,7 +108,7 @@ class AlignClient:
         self.process.stdin.write(
             json.dumps(
                 request,
-                ensure_ascii=False,
+                ensure_ascii=True,
             )
             + "\n"
         )
@@ -100,5 +143,4 @@ class AlignClient:
             self.process.wait(timeout=2)
         except subprocess.TimeoutExpired:
             self.process.kill()
-
 

@@ -6,12 +6,13 @@ from align_client import AlignClient
 from logic_bridge import LogicBridge
 
 from user_settings import USER_SETTINGS
+from config import SETTINGS
 
 
 class TranslationPipeline:
     def __init__(
         self,
-        ollama_url="http://127.0.0.1:11434/api/generate",
+        ollama_url=f"{SETTINGS.ollama_url}/api/generate",
         model="riva-translate",
     ):
         self.ollama_url = ollama_url

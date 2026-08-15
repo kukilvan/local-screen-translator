@@ -59,25 +59,6 @@ pip install -r requirements.txt
 
 ---
 
-# 3. Windows OCR
-
-Открой PowerShell **от администратора** и выполни:
-
-```powershell
-.\install_ocr_en.ps1
-```
-
-Вручную это та же команда:
-
-```powershell
-Add-WindowsCapability -Online -Name "Language.OCR~~~en-US~0.0.1.0"
-```
-
-Для другого исходного языка поменяй `ocr_language` в `config.py` и установи
-соответствующий Windows OCR language capability.
-
----
-
 # 4. Жестко назначить Ollama на RTX 3070 Ti
 
 Сначала посмотри GPU:

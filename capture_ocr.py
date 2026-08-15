@@ -8,36 +8,80 @@ _NVIDIA_DLL_HANDLES = []
 
 
 def _add_nvidia_dll_directories() -> None:
-    nvidia_root = os.path.join(
-        sys.prefix,
-        "Lib",
-        "site-packages",
-        "nvidia",
+    """
+    Add CUDA/cuDNN DLL directories for both development venv and
+    PyInstaller onedir layouts.
+    """
+    nvidia_roots = []
+
+    nvidia_roots.append(
+        os.path.join(
+            sys.prefix,
+            "Lib",
+            "site-packages",
+            "nvidia",
+        )
     )
 
-    dll_dirs = [
-        os.path.join(
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        nvidia_roots.append(
+            os.path.join(meipass, "nvidia")
+        )
+
+    exe_dir = os.path.dirname(
+        os.path.abspath(sys.executable)
+    )
+    nvidia_roots.extend(
+        [
+            os.path.join(exe_dir, "i", "nvidia"),
+            os.path.join(exe_dir, "_internal", "nvidia"),
+        ]
+    )
+
+    seen_roots = set()
+    dll_dirs = []
+
+    for nvidia_root in nvidia_roots:
+        key = os.path.normcase(
+            os.path.abspath(nvidia_root)
+        )
+        if key in seen_roots:
+            continue
+        seen_roots.add(key)
+
+        if not os.path.isdir(nvidia_root):
+            continue
+
+        cuda_bin = os.path.join(
             nvidia_root,
             "cu13",
             "bin",
             "x86_64",
-        ),
-    ]
+        )
+        if os.path.isdir(cuda_bin):
+            dll_dirs.append(cuda_bin)
 
-    cudnn_root = os.path.join(
-        nvidia_root,
-        "cudnn",
-    )
+        cudnn_root = os.path.join(
+            nvidia_root,
+            "cudnn",
+        )
 
-    if os.path.isdir(cudnn_root):
-        for root, _, files in os.walk(cudnn_root):
-            if "cudnn64_9.dll" in files:
-                dll_dirs.append(root)
-                break
+        if os.path.isdir(cudnn_root):
+            for root, _, files in os.walk(cudnn_root):
+                if "cudnn64_9.dll" in files:
+                    dll_dirs.append(root)
+                    break
+
+    seen_dirs = set()
 
     for dll_dir in dll_dirs:
-        if not os.path.isdir(dll_dir):
+        key = os.path.normcase(
+            os.path.abspath(dll_dir)
+        )
+        if key in seen_dirs:
             continue
+        seen_dirs.add(key)
 
         _NVIDIA_DLL_HANDLES.append(
             os.add_dll_directory(dll_dir)
@@ -48,7 +92,6 @@ def _add_nvidia_dll_directories() -> None:
             + os.pathsep
             + os.environ.get("PATH", "")
         )
-
 
 
 _add_nvidia_dll_directories()
@@ -69,6 +112,7 @@ import dxcam
 import numpy as np
 
 from config import SETTINGS
+from runtime_paths import PADDLE_DET_MODEL_DIR, PADDLE_REC_MODEL_DIR
 
 
 @dataclass(frozen=True)
@@ -160,9 +204,20 @@ class ScreenOCR:
 
     def __init__(self) -> None:
 
+        for model_dir, label in (
+            (PADDLE_DET_MODEL_DIR, "Paddle detection model"),
+            (PADDLE_REC_MODEL_DIR, "Paddle recognition model"),
+        ):
+            if not model_dir.is_dir():
+                raise RuntimeError(
+                    f"{label} not found: {model_dir}"
+                )
+
         self.paddle = PaddleOCR(
             text_detection_model_name="PP-OCRv6_small_det",
+            text_detection_model_dir=str(PADDLE_DET_MODEL_DIR),
             text_recognition_model_name="latin_PP-OCRv5_mobile_rec",
+            text_recognition_model_dir=str(PADDLE_REC_MODEL_DIR),
             use_doc_orientation_classify=False,
             use_doc_unwarping=False,
             use_textline_orientation=False,

@@ -1,4 +1,4 @@
-FROM riva-en-ru:latest
+FROM hf.co/liodon-ai/Riva-Translate-4B-Instruct-v2-imatrix-GGUF:Q6_K
 
 TEMPLATE """<s>System
 {{ .System }}</s>

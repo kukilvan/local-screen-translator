@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import traceback
 import ctypes
 import re
@@ -27,6 +27,8 @@ from llm_client import OllamaClient, OllamaError
 from translation_pipeline import TranslationPipeline
 
 from logic_bridge import LogicBridge, LogicBridgeError
+from config import SETTINGS
+from runtime_paths import OLLAMA_EXE, OLLAMA_MODELS_DIR
 
 
 CURSOR_MARKER = "<<<CURSOR>>>"
@@ -593,9 +595,16 @@ class TranslatorController(QObject):
 
         self.pipeline.close()
 
-def ensure_ollama_running() -> None:
+def _bundled_ollama_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env["OLLAMA_HOST"] = SETTINGS.ollama_url.replace("http://", "").replace("https://", "")
+    env["OLLAMA_MODELS"] = str(OLLAMA_MODELS_DIR)
+    return env
+
+
+def ensure_ollama_running() -> subprocess.Popen | None:
     host = "127.0.0.1"
-    port = 11434
+    port = 11435
 
     def server_is_ready() -> bool:
         try:
@@ -609,35 +618,63 @@ def ensure_ollama_running() -> None:
             return False
 
     if server_is_ready():
-        return
+        return None
 
-    ollama_exe = os.path.join(
-        os.environ["LOCALAPPDATA"],
-        "Programs",
-        "Ollama",
-        "ollama.exe",
-    )
-    subprocess.Popen(
+    if not OLLAMA_EXE.is_file():
+        raise RuntimeError(
+            f"Bundled Ollama executable not found: {OLLAMA_EXE}"
+        )
+
+    if not OLLAMA_MODELS_DIR.is_dir():
+        raise RuntimeError(
+            f"Bundled Ollama models not found: {OLLAMA_MODELS_DIR}"
+        )
+
+    process = subprocess.Popen(
         [
-            ollama_exe,
+            str(OLLAMA_EXE),
             "serve",
         ],
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         creationflags=subprocess.CREATE_NO_WINDOW,
+        env=_bundled_ollama_env(),
     )
 
     deadline = time.perf_counter() + 10.0
 
     while time.perf_counter() < deadline:
         if server_is_ready():
-            return
+            return process
+
+        if process.poll() is not None:
+            raise RuntimeError(
+                f"Bundled Ollama exited with code {process.returncode}"
+            )
 
         time.sleep(0.1)
 
+    try:
+        subprocess.run(
+            [
+                "taskkill",
+                "/F",
+                "/T",
+                "/PID",
+                str(process.pid),
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NO_WINDOW,
+            timeout=5,
+            check=False,
+        )
+    except Exception:
+        pass
+
     raise RuntimeError(
-        "Ollama server did not start within 10 seconds"
+        "Bundled Ollama server did not start within 10 seconds"
     )
 
 def acquire_single_instance_mutex():
@@ -702,12 +739,20 @@ def main() -> int:
 
     hud = TranslationHUD()
 
+    ollama_process = None
+
     try:
-        ensure_ollama_running()
+        ollama_process = ensure_ollama_running()
 
         controller = TranslatorController(hud)
 
     except Exception as exc:
+        print("", flush=True)
+        print("=== STARTUP ERROR ===", flush=True)
+        traceback.print_exc()
+        print("=== END STARTUP ERROR ===", flush=True)
+        print("", flush=True)
+
         hud.show_message(
             f"Ошибка запуска: {exc}"
         )
@@ -794,21 +839,16 @@ def main() -> int:
 
         controller.shutdown()
 
-        ollama_exe = os.path.join(
-            os.environ["LOCALAPPDATA"],
-            "Programs",
-            "Ollama",
-            "ollama.exe",
-        )
+        ollama_env = _bundled_ollama_env()
 
         for model_name in (
             "qwen3:4b",
-            "riva-translate",
+            "riva-translate:latest",
         ):
             try:
                 subprocess.run(
                     [
-                        ollama_exe,
+                        str(OLLAMA_EXE),
                         "stop",
                         model_name,
                     ],
@@ -817,68 +857,32 @@ def main() -> int:
                     creationflags=subprocess.CREATE_NO_WINDOW,
                     timeout=5,
                     check=False,
+                    env=ollama_env,
                 )
 
             except Exception:
                 pass
 
-        # Полностью закрываем Ollama server.
-        # ollama stop выгружает модели, но сам сервер не завершает.
-        try:
-            subprocess.run(
-                [
-                    "taskkill",
-                    "/F",
-                    "/T",
-                    "/IM",
-                    "ollama.exe",
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                creationflags=subprocess.CREATE_NO_WINDOW,
-                timeout=5,
-                check=False,
-            )
-
-        except Exception:
-            pass
-        try:
-            subprocess.run(
-                [
-                    "taskkill",
-                    "/F",
-                    "/T",
-                    "/IM",
-                    "ollama app.exe",
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                creationflags=subprocess.CREATE_NO_WINDOW,
-                timeout=5,
-                check=False,
-            )
-
-        except Exception:
-            pass
-        # Страховка на случай оставшегося model runner.
-        try:
-            subprocess.run(
-                [
-                    "taskkill",
-                    "/F",
-                    "/T",
-                    "/IM",
-                    "llama-server.exe",
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                creationflags=subprocess.CREATE_NO_WINDOW,
-                timeout=5,
-                check=False,
-            )
-
-        except Exception:
-            pass
+        # Kill only the bundled Ollama process tree started by this app.
+        # Never kill a separately installed/user-managed Ollama instance.
+        if ollama_process is not None:
+            try:
+                subprocess.run(
+                    [
+                        "taskkill",
+                        "/F",
+                        "/T",
+                        "/PID",
+                        str(ollama_process.pid),
+                    ],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    creationflags=subprocess.CREATE_NO_WINDOW,
+                    timeout=5,
+                    check=False,
+                )
+            except Exception:
+                pass
 
     app.aboutToQuit.connect(
         cleanup

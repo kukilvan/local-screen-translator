@@ -1,8 +1,10 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 
 import requests
+
+from config import SETTINGS
 
 
 class LogicBridgeError(RuntimeError):
@@ -12,7 +14,7 @@ class LogicBridgeError(RuntimeError):
 class LogicBridge:
     def __init__(
         self,
-        ollama_url: str = "http://127.0.0.1:11434/api/chat",
+        ollama_url: str = f"{SETTINGS.ollama_url}/api/chat",
         model: str = "qwen3:4b",
     ) -> None:
         self.ollama_url = ollama_url
@@ -164,23 +166,17 @@ SENTENCE_TRANSLATION:
         normalized_span = " ".join(source_span.split())
         normalized_word = " ".join(target_word.split())
 
-        if (
-            normalized_span.casefold()
-            not in normalized_source.casefold()
-        ):
+        if normalized_word.casefold() not in normalized_source.casefold():
             raise LogicBridgeError(
-                f"source_span is not present in SOURCE: "
-                f"{source_span!r}"
+                f"TARGET_WORD is not present in SOURCE: "
+                f"{target_word!r}"
             )
 
         if (
-            normalized_word.casefold()
-            not in normalized_span.casefold()
+            normalized_span.casefold() not in normalized_source.casefold()
+            or normalized_word.casefold() not in normalized_span.casefold()
         ):
-            raise LogicBridgeError(
-                f"source_span does not contain TARGET_WORD: "
-                f"{source_span!r}"
-            )
+            normalized_span = normalized_word
 
         return {
             "source_span": normalized_span,
@@ -194,7 +190,7 @@ if __name__ == "__main__":
     result = bridge.resolve(
         source="He turned down the offer immediately.",
         target_word="down",
-        sentence_translation="Он сразу отклонил предложение.",
+        sentence_translation="ÐžÐ½ ÑÑ€Ð°Ð·Ñƒ Ð¾Ñ‚ÐºÐ»Ð¾Ð½Ð¸Ð» Ð¿Ñ€ÐµÐ´Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ.",
     )
 
     print(

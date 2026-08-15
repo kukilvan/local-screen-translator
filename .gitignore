@@ -9,3 +9,8 @@ debug_ocr_empty.png
 .idea/
 .vscode/
 ocr_test.png
+PROJECT_STATE.txt
+release_build/
+backup_*/
+*.backup_*
+*.bak_*

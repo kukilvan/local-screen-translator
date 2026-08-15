@@ -216,6 +216,7 @@ class TranslatorController(QObject):
 
         self._request_id = 0
         self._busy = False
+        self._speech_text: str | None = None
 
         # Qwen специально больше не preload'им.
         # Иначе старый 7B сразу занимает VRAM даже тогда,
@@ -230,6 +231,7 @@ class TranslatorController(QObject):
         self._busy = True
         self._request_id += 1
         request_id = self._request_id
+        self._speech_text = None
 
         cursor_x, cursor_y = self.ocr.cursor_pos()
 
@@ -366,6 +368,10 @@ class TranslatorController(QObject):
                     logic_used = False
 
                 t4 = time.perf_counter()
+
+                self._speech_text = (
+                    source_span.strip()
+                )
 
                 if not dictionary_translation:
                     raise RuntimeError(
@@ -566,6 +572,7 @@ class TranslatorController(QObject):
             (x, y),
             source_rect,
             focus_rect,
+            speech_text=self._speech_text,
         )
 
 
@@ -581,6 +588,7 @@ class TranslatorController(QObject):
             return
 
         self._busy = False
+        self._speech_text = None
 
         self.hud.show_message(
             text,

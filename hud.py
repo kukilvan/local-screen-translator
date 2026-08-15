@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import html
 import re
 import ctypes
@@ -6,10 +6,11 @@ from PySide6.QtGui import QColor, QPainter, QPen
 
 from PySide6.QtCore import QPoint, QRect, Qt, QTimer
 from PySide6.QtGui import QCursor, QGuiApplication
-from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QToolButton, QVBoxLayout, QWidget
 
 from config import SETTINGS
 from user_settings import USER_SETTINGS
+from speech import speak_english
 
 class SourceHighlight(QWidget):
     def __init__(self) -> None:
@@ -190,6 +191,63 @@ class FocusHighlight(QWidget):
             5,
             5,
         )
+
+class SpeakerButton(QToolButton):
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+
+        painter = QPainter(self)
+        painter.setRenderHint(
+            QPainter.RenderHint.Antialiasing,
+            True,
+        )
+
+        pen = QPen(
+            QColor(
+                240,
+                240,
+                240,
+                235,
+            )
+        )
+        pen.setWidthF(1.8)
+        painter.setPen(pen)
+
+        cy = self.height() // 2
+
+        # Speaker body
+        painter.drawLine(7, cy - 3, 11, cy - 3)
+        painter.drawLine(7, cy - 3, 7, cy + 3)
+        painter.drawLine(7, cy + 3, 11, cy + 3)
+
+        painter.drawLine(11, cy - 3, 15, cy - 7)
+        painter.drawLine(15, cy - 7, 15, cy + 7)
+        painter.drawLine(15, cy + 7, 11, cy + 3)
+
+        # Sound waves
+        painter.drawArc(
+            QRect(
+                14,
+                cy - 6,
+                9,
+                12,
+            ),
+            -60 * 16,
+            120 * 16,
+        )
+
+        painter.drawArc(
+            QRect(
+                14,
+                cy - 9,
+                14,
+                18,
+            ),
+            -55 * 16,
+            110 * 16,
+        )
+
+
 class TranslationHUD(QWidget):
     def __init__(self) -> None:
         flags = (
@@ -222,11 +280,43 @@ class TranslationHUD(QWidget):
             """
         )
 
-        frame = QFrame()
-        frame.setAttribute(
-            Qt.WidgetAttribute.WA_TransparentForMouseEvents,
-            True,
+        self._speech_text = ""
+
+        self._speak_button = SpeakerButton()
+        self._speak_button.setCursor(
+            Qt.CursorShape.PointingHandCursor
         )
+        self._speak_button.setFixedSize(
+            30,
+            26,
+        )
+        self._speak_button.setStyleSheet(
+            """
+            QToolButton {
+                color: rgba(255, 255, 255, 225);
+                background-color: rgba(255, 255, 255, 18);
+                border: 1px solid rgba(255, 255, 255, 28);
+                border-radius: 6px;
+                font-family: "Segoe UI Emoji";
+                font-size: 15px;
+            }
+
+            QToolButton:hover {
+                background-color: rgba(255, 255, 255, 34);
+                border: 1px solid rgba(255, 255, 255, 55);
+            }
+
+            QToolButton:pressed {
+                background-color: rgba(255, 255, 255, 48);
+            }
+            """
+        )
+        self._speak_button.clicked.connect(
+            self._speak_current
+        )
+        self._speak_button.hide()
+
+        frame = QFrame()
         frame.setObjectName("HudFrame")
         frame.setStyleSheet(
             """
@@ -240,6 +330,22 @@ class TranslationHUD(QWidget):
         frame_layout = QVBoxLayout(frame)
         frame_layout.setContentsMargins(0, 0, 0, 0)
         frame_layout.addWidget(self._label)
+
+        speak_row = QHBoxLayout()
+        speak_row.setContentsMargins(
+            14,
+            0,
+            14,
+            10,
+        )
+        speak_row.addWidget(
+            self._speak_button
+        )
+        speak_row.addStretch(1)
+
+        frame_layout.addLayout(
+            speak_row
+        )
 
         root = QVBoxLayout(self)
         root.setContentsMargins(8, 8, 8, 8)
@@ -260,6 +366,14 @@ class TranslationHUD(QWidget):
         self._focus_highlight = FocusHighlight()
         self._dragging = False
         self._drag_offset = QPoint()
+
+    def _speak_current(self) -> None:
+        if not self._speech_text:
+            return
+
+        speak_english(
+            self._speech_text
+        )
 
     def _apply_win32_noactivate(self) -> None:
         if not self.winId():
@@ -458,8 +572,17 @@ class TranslationHUD(QWidget):
         cursor_pos: tuple[int, int] | None = None,
         source_rect=None,
         focus_rect=None,
+        speech_text: str | None = None,
     ) -> None:
         raw_text = text.strip()
+
+        self._speech_text = (
+            speech_text or ""
+        ).strip()
+
+        self._speak_button.setVisible(
+            bool(self._speech_text)
+        )
         self._source_highlight.show_source_rect(
             source_rect
         )
@@ -497,7 +620,7 @@ class TranslationHUD(QWidget):
                 )
 
             else:
-                # Совместимость со старым одиночным маркером.
+                # Ð¡Ð¾Ð²Ð¼ÐµÑÑ‚Ð¸Ð¼Ð¾ÑÑ‚ÑŒ ÑÐ¾ ÑÑ‚Ð°Ñ€Ñ‹Ð¼ Ð¾Ð´Ð¸Ð½Ð¾Ñ‡Ð½Ñ‹Ð¼ Ð¼Ð°Ñ€ÐºÐµÑ€Ð¾Ð¼.
                 match = re.match(
                     r"(\s*)([^\s,.;:!?]+)(.*)",
                     after_start,
@@ -525,7 +648,7 @@ class TranslationHUD(QWidget):
         else:
             display_text = html.escape(raw_text)
 
-        # Служебные маркеры никогда не показываем пользователю.
+        # Ð¡Ð»ÑƒÐ¶ÐµÐ±Ð½Ñ‹Ðµ Ð¼Ð°Ñ€ÐºÐµÑ€Ñ‹ Ð½Ð¸ÐºÐ¾Ð³Ð´Ð° Ð½Ðµ Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŽ.
         display_text = display_text.replace(
             html.escape(start_marker),
             "",
@@ -719,3 +842,4 @@ class TranslationHUD(QWidget):
         self._auto_hide.start(
             USER_SETTINGS.hud_auto_hide_ms
         )
+

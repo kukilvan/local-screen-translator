@@ -33,6 +33,36 @@ SlicesPerDisk=1
 WizardStyle=modern
 DisableProgramGroupPage=yes
 
+LanguageDetectionMethod=uilanguage
+ShowLanguageDialog=no
+
+[Languages]
+Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
+Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
+Name: "no"; MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
+Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "ar"; MessagesFile: "compiler:Languages\Arabic.isl"
+Name: "th"; MessagesFile: "compiler:Languages\Thai.isl"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
+
 [Files]
 Source: "{#SourceRoot}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
@@ -41,7 +71,8 @@ Name: "{autoprograms}\Local Screen Translator"; Filename: "{app}\{#MyAppExeName}
 Name: "{autodesktop}\Local Screen Translator"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Tasks]
-Name: "desktopicon"; Description: "Создать ярлык на рабочем столе"; GroupDescription: "Дополнительные задачи:"
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Запустить Local Screen Translator"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+

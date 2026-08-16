@@ -1,219 +1,229 @@
-# Local Screen Translator (Windows)
+﻿# Local Screen Translator
 
-Локальный прототип утилиты в стиле Lookupper:
+Local Screen Translator is a Windows desktop application for translating text
+directly from games, applications, browsers and video without sending captured
+text to cloud AI services.
 
-- `Ctrl + Alt + Space` — слово под курсором + окружающий контекст.
-- `Ctrl + Alt + Shift + Space` — абзац/блок текста рядом с курсором.
-- DXGI one-shot screen capture через DXcam.
-- Windows.Media.Ocr на CPU.
-- локальная Ollama по `127.0.0.1:11434`.
-- popup HUD поверх обычных окон и Borderless Fullscreen.
-- HUD не забирает фокус и пропускает клики в игру.
-- никакого внешнего API.
+Version: **1.0.0**
 
-## Почему так
+## Main features
 
-### Захват
-DXcam использует Desktop Duplication API. В этом проекте `camera.start()` НЕ вызывается:
-кадр снимается только при горячей клавише, поэтому в idle нет постоянного capture loop.
+- Translate the word under the mouse cursor with surrounding context.
+- Translate a paragraph or nearby block of text.
+- Global configurable hotkeys.
+- Popup HUD displayed over normal and borderless fullscreen applications.
+- English word pronunciation using Microsoft Windows voices.
+- GPU accelerated OCR.
+- Local translation models.
+- Built-in System Check with self-service diagnostic error codes.
+- Multilingual application interface.
+- No external cloud translation API.
+
+Default hotkeys:
+
+- `Ctrl + Alt + Space` - translate the word under the cursor.
+- `Ctrl + Alt + Shift + Space` - translate the nearby paragraph.
+
+## Privacy
+
+Translation is performed locally.
+
+The application uses its own bundled Ollama runtime on:
+
+`127.0.0.1:11435`
+
+The translation client is restricted to loopback/local communication.
+
+Captured text is not intentionally sent to an external translation service.
+
+## Installation
+
+Download **all six installer files** from the same release:
+
+- `LocalScreenTranslator_Setup_1.0.0.exe`
+- `LocalScreenTranslator_Setup_1.0.0-1.bin`
+- `LocalScreenTranslator_Setup_1.0.0-2.bin`
+- `LocalScreenTranslator_Setup_1.0.0-3.bin`
+- `LocalScreenTranslator_Setup_1.0.0-4.bin`
+- `LocalScreenTranslator_Setup_1.0.0-5.bin`
+
+Keep all six files in the same folder and run:
+
+`LocalScreenTranslator_Setup_1.0.0.exe`
+
+The `.bin` files are required parts of the installer and should not be opened
+individually.
+
+You do **not** need to manually install:
+
+- Python
+- Ollama
+- PaddlePaddle
+- CUDA Toolkit
+- translation models
+- OCR models
+
+They are included with the application where required.
+
+## System requirements
+
+Current version:
+
+- Windows 10 or Windows 11 64-bit
+- NVIDIA GPU
+- NVIDIA driver compatible with the bundled CUDA/Paddle runtime
+- Compute Capability 7.5 or newer
+- 8 GB VRAM recommended
+- Approximately 10 GB of free disk space for the installed application
+
+The built-in System Check verifies the actual machine before normal use.
+
+## How it works
+
+### Screen capture
+
+Screen capture is performed through DXcam / Windows Desktop Duplication.
+
+Capture is requested when translation is triggered rather than continuously
+recording the screen in the background.
 
 ### OCR
-Используется встроенный Windows OCR. Он возвращает линии, отдельные слова и bounding boxes,
-поэтому можно определить слово непосредственно под курсором.
 
-### LLM
-По умолчанию:
-`qwen3:4b-instruct`
+Text recognition uses PaddleOCR with bundled OCR models and GPU acceleration.
 
-Для коротких переводов на RTX 3070 Ti 8GB это разумнее 7B/8B модели по задержке.
-Если захочется больше качества, можно заменить в `config.py` модель на более крупную.
+Current OCR assets include:
 
----
+- PP-OCRv6 small detection model
+- Latin PP-OCRv5 mobile recognition model
 
-# 1. Требования
+### Word translation
 
-- Windows 11 / Windows 10 x64.
-- Python 3.12 x64.
-- NVIDIA driver, в котором видны обе GPU.
-- Ollama for Windows.
-- установленный English OCR language capability Windows.
+Word mode uses the local `qwen3:4b` model together with surrounding OCR
+context to determine the appropriate translation of the word under the cursor.
 
----
+### Paragraph translation
 
-# 2. Python
+Paragraph mode uses the bundled Riva Translate model.
 
-Запусти:
+The current packaged model is based on:
 
-```bat
-setup.bat
-```
+`nvidia/Riva-Translate-4B-Instruct-v2`
 
-Или вручную:
+and is distributed in quantized GGUF form.
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -U pip
-pip install -r requirements.txt
-```
+### Word alignment
 
----
+SimAlign and multilingual BERT are used for source/target alignment where
+required by the translation pipeline.
 
-# 4. Жестко назначить Ollama на RTX 3070 Ti
+### Speech
 
-Сначала посмотри GPU:
+English pronunciation uses Microsoft Windows speech capabilities. Available
+voices depend on the Windows voice packages installed on the computer.
 
-```powershell
-nvidia-smi -L
-```
+## System Check
 
-Затем:
+Local Screen Translator includes a compatibility and runtime diagnostic system.
 
-```powershell
-.\configure_ollama_3070ti.ps1
-```
+It checks, among other things:
 
-Скрипт сам ищет `RTX 3070 Ti`, берет ее UUID и записывает для пользователя:
+- Windows architecture
+- NVIDIA GPU
+- NVIDIA driver
+- GPU compute capability
+- available VRAM
+- screen capture
+- PaddleOCR GPU runtime
+- bundled application assets
+- local Ollama runtime
+- required translation models
+- alignment worker
+- Microsoft speech
+- writable application data directory
+- local port 11435
 
-- `CUDA_VISIBLE_DEVICES=<UUID RTX 3070 Ti>`
-- `OLLAMA_NO_CLOUD=1`
-- `OLLAMA_HOST=127.0.0.1:11434`
-- `OLLAMA_NUM_PARALLEL=1`
-- `OLLAMA_MAX_LOADED_MODELS=1`
-- `OLLAMA_CONTEXT_LENGTH=2048`
+When a failure is detected the application provides a stable diagnostic code
+such as `LST-GPU-001`, `LST-AI-001` or `LST-CAP-001` together with suggested
+self-service actions.
 
-После скрипта ОБЯЗАТЕЛЬНО полностью выбери **Quit Ollama** из системного трея
-и запусти Ollama снова — Windows-приложение читает environment variables при старте.
+## Multiple NVIDIA GPUs
 
----
+Version 1.0.0 currently uses NVIDIA GPU 0 for its GPU processing pipeline.
 
-# 5. Модель
+If more than one NVIDIA GPU is installed, System Check shows which GPU is
+being used.
 
-```powershell
-ollama pull qwen3:4b-instruct
-```
+## Fullscreen applications
 
-Проверка:
+Borderless Windowed mode generally provides the best compatibility.
 
-```powershell
-ollama run qwen3:4b-instruct "Translate 'shelter' to Russian. Answer briefly."
-```
+Some games, exclusive fullscreen modes, anti-cheat systems or protected
+content may prevent screen capture or overlay display.
 
-Затем:
+## Windows security and code signing
 
-```powershell
-ollama ps
-```
+Version 1.0.0 release binaries are currently not digitally code-signed.
 
-Также открой:
+Depending on Windows security configuration, reputation-based protection or
+Smart App Control may block an unsigned executable.
 
-```powershell
-nvidia-smi
-```
+Do not disable or weaken Windows security features solely to run the
+application.
 
-и убедись, что VRAM у процесса Ollama занята именно на RTX 3070 Ti.
+## Troubleshooting
 
----
+Start with the built-in **System Check**.
 
-# 6. Запуск
+If an error appears:
 
-```bat
-run.bat
-```
+1. Note the complete `LST-...` error code.
+2. Read the self-help instructions shown by the application.
+3. Check Windows Security protection history if an application file appears
+   to be missing.
+4. Reinstall using the complete installer set if files were removed.
 
-Горячие клавиши:
+Do not manually download random DLL files or replacement model files from
+untrusted websites.
 
-- `Ctrl + Alt + Space` — перевод слова.
-- `Ctrl + Alt + Shift + Space` — перевод абзаца.
+## Building from source
 
-Они находятся в `config.py`.
+The repository contains the Python application source and development
+requirements.
 
-Важно: `RegisterHotKey` не позволяет нормально использовать комбинацию,
-состоящую только из `Ctrl + Alt` без обычной клавиши. Поэтому в MVP используется Space.
+The public installer is a standalone distribution. End users do not need the
+development environment.
 
----
+Main development dependency files:
 
-# 7. Если игра не на основном мониторе
+- `requirements.txt`
+- `requirements-paddle.txt`
+- `requirements-align.txt`
 
-Выполни:
+The release build uses separate main and alignment-worker environments.
 
-```powershell
-.\.venv\Scripts\python.exe -c "import dxcam; print(dxcam.device_info()); print(dxcam.output_info())"
-```
+## Third-party software and models
 
-Ты увидишь что-то вроде:
+This project includes or redistributes third-party software and model weights
+under their respective licenses.
 
-```text
-Device[0]: ...
-Device[0] Output[0]: Res:(2560, 1440) Rot:0 Primary:True
-Device[0] Output[1]: Res:(3840, 2160) Rot:0 Primary:False
-```
+See:
 
-Поменяй в `config.py`:
+- `THIRD_PARTY_NOTICES.md`
+- `NOTICE`
+- `third_party_licenses/`
 
-```python
-capture_device_idx = 0
-capture_output_idx = 1
-```
+The MIT license of Local Screen Translator itself does **not** replace or
+override licenses that apply to bundled third-party components or models.
 
-И перезапусти приложение.
+## License
 
----
+Local Screen Translator source code is released under the MIT License.
 
-# 8. Borderless vs Exclusive Fullscreen
+See `LICENSE`.
 
-Это принципиальное ограничение Windows:
+## Releases
 
-- обычные приложения: да;
-- Borderless Fullscreen: да;
-- большинство современных flip-model игр: обычно да;
-- настоящий Exclusive Fullscreen: захват DXGI может работать, но обычное top-level
-  Qt/Win32 окно не обязано рисоваться поверх swap chain игры.
+Release packages and checksums are published in the repository Releases
+section:
 
-Для надежной работы HUD без инжекта используй **Borderless Fullscreen**.
-
-Чтобы гарантированно рисовать поверх настоящего Exclusive Fullscreen, нужен уже
-другой уровень реализации: DirectX Present hook / injected overlay / game-specific
-overlay. Это повышает сложность и может конфликтовать с anti-cheat, поэтому такой
-вариант намеренно не используется в этом MVP.
-
----
-
-# 9. Производительность
-
-Idle:
-- нет OCR;
-- нет постоянного screenshot loop;
-- нет polling клавиатуры: Windows блокирует поток на `GetMessage`;
-- HUD timers остановлены, пока окно скрыто;
-- модель может оставаться в VRAM, но GPU compute практически не используется.
-
-По hotkey:
-1. one-shot DXGI crop;
-2. Windows OCR;
-3. короткий локальный prompt;
-4. ответ Ollama;
-5. HUD.
-
-Для самой низкой задержки модель держится в VRAM через `keep_alive=-1`.
-Если хочешь освобождать VRAM, в `config.py` поставь, например:
-
-```python
-ollama_keep_alive = "10m"
-```
-
----
-
-# 10. Что улучшать дальше
-
-После проверки MVP логичные улучшения:
-
-1. кешировать перевод часто встречающихся слов;
-2. автоматически определять OCR-язык;
-3. режим удержания клавиши + hover;
-4. drag-select прямоугольником;
-5. потоковый вывод токенов в HUD;
-6. custom glossary для конкретной игры;
-7. SQLite-история изученных слов;
-8. packaging через PyInstaller/Nuitka в один EXE;
-9. отдельный быстрый OCR pipeline для очень мелких игровых шрифтов.
+https://github.com/kukilvan/local-screen-translator/releases

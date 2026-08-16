@@ -36,6 +36,19 @@ SC_TRANSLATIONS = {
             "System Check could not complete."
         ),
         "technical_details": "TECHNICAL DETAILS",
+        "report_ready_title": "SYSTEM READY",
+        "report_ready_line1": "All compatibility checks passed.",
+        "report_ready_line2": "Local Screen Translator is ready to use.",
+        "report_self_help_title": (
+            "LOCAL SCREEN TRANSLATOR - SELF-HELP REPORT"
+        ),
+        "report_detected": "Detected:",
+        "report_how_to_fix": "How to fix:",
+        "report_search_web": "Search the web for:",
+        "report_after_steps": (
+            "After completing the suggested steps, "
+            "run System Check again."
+        ),
     },
 
     "ru": {
@@ -67,6 +80,24 @@ SC_TRANSLATIONS = {
             "Не удалось завершить проверку системы."
         ),
         "technical_details": "ТЕХНИЧЕСКИЕ ДАННЫЕ",
+        "report_ready_title": "СИСТЕМА ГОТОВА",
+        "report_ready_line1": (
+            "Все проверки совместимости успешно пройдены."
+        ),
+        "report_ready_line2": (
+            "Local Screen Translator готов к работе."
+        ),
+        "report_self_help_title": (
+            "LOCAL SCREEN TRANSLATOR - "
+            "САМОСТОЯТЕЛЬНАЯ ДИАГНОСТИКА"
+        ),
+        "report_detected": "Обнаружено:",
+        "report_how_to_fix": "Как исправить:",
+        "report_search_web": "Для поиска в интернете:",
+        "report_after_steps": (
+            "После выполнения указанных действий "
+            "снова запустите Проверку системы."
+        ),
     },
 }
 

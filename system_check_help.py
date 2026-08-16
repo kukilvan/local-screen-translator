@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from system_check import CheckResult, FAIL, WARN
-from system_check_i18n import current_system_check_language
+from system_check_i18n import (
+    current_system_check_language,
+    sc_t,
+)
 
 
 def _entry(
@@ -373,11 +376,19 @@ RU_HELP = {
 }
 
 
-def _localize_help_item(item: dict) -> dict:
-    if current_system_check_language() != "ru":
-        return item
+HELP_TRANSLATIONS = {
+    "ru": RU_HELP,
+}
 
-    translated = RU_HELP.get(item["code"])
+
+def _localize_help_item(item: dict) -> dict:
+    language = current_system_check_language()
+
+    translated = (
+        HELP_TRANSLATIONS
+        .get(language, {})
+        .get(item["code"])
+    )
 
     if not translated:
         return item
@@ -399,29 +410,16 @@ def format_self_help_report(
     ]
 
     if not problems:
-        if current_system_check_language() == "ru":
-            return (
-                "СИСТЕМА ГОТОВА\n\n"
-                "Все проверки совместимости успешно пройдены.\n"
-                "Local Screen Translator готов к работе."
-            )
-
         return (
-            "SYSTEM READY\n\n"
-            "All compatibility checks passed.\n"
-            "Local Screen Translator is ready to use."
+            sc_t("report_ready_title")
+            + "\n\n"
+            + sc_t("report_ready_line1")
+            + "\n"
+            + sc_t("report_ready_line2")
         )
 
-    russian = (
-        current_system_check_language() == "ru"
-    )
-
     lines = [
-        (
-            "LOCAL SCREEN TRANSLATOR - САМОСТОЯТЕЛЬНАЯ ДИАГНОСТИКА"
-            if russian
-            else "LOCAL SCREEN TRANSLATOR - SELF-HELP REPORT"
-        ),
+        sc_t("report_self_help_title"),
         "",
     ]
 
@@ -437,17 +435,12 @@ def format_self_help_report(
             f"{help_item['code']} - {help_item['title']}"
         )
         lines.append(
-            (
-                f"Обнаружено: {result.detail}"
-                if russian
-                else f"Detected: {result.detail}"
-            )
+            f"{sc_t('report_detected')} "
+            f"{result.detail}"
         )
         lines.append("")
         lines.append(
-            "Как исправить:"
-            if russian
-            else "How to fix:"
+            sc_t("report_how_to_fix")
         )
 
         for index, action in enumerate(
@@ -460,9 +453,7 @@ def format_self_help_report(
 
         lines.append("")
         lines.append(
-            "Для поиска в интернете:"
-            if russian
-            else "Search the web for:"
+            sc_t("report_search_web")
         )
         lines.append(
             f'  "{help_item["search_terms"]}"'
@@ -472,14 +463,7 @@ def format_self_help_report(
         lines.append("")
 
     lines.append(
-        (
-            "После выполнения указанных действий "
-            "снова запустите Проверку системы."
-            if russian
-            else
-            "After completing the suggested steps, "
-            "run System Check again."
-        )
+        sc_t("report_after_steps")
     )
 
     return "\n".join(lines)

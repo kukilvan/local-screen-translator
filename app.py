@@ -842,6 +842,23 @@ def acquire_single_instance_mutex():
         mutex,
     )
 
+def show_startup_diagnostics(
+    hud,
+    exc: Exception,
+) -> None:
+    hud.show_message(
+        t(
+            "startup_error",
+            error=str(exc),
+        )
+    )
+
+    dialog = SystemCheckDialog(
+        auto_start=True,
+    )
+    dialog.exec()
+
+
 def main() -> int:
     enable_per_monitor_dpi_awareness()
 
@@ -885,13 +902,11 @@ def main() -> int:
         print("=== END STARTUP ERROR ===", flush=True)
         print("", flush=True)
 
-        hud.show_message(
-            t(
-                "startup_error",
-                error=str(exc),
-            )
+        show_startup_diagnostics(
+            hud,
+            exc,
         )
-        return app.exec()
+        return 1
 
     hotkeys = GlobalHotkeys()
 

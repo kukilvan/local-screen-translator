@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from system_check import (
+    CheckResult,
     FAIL,
     PASS,
     WARN,
@@ -149,7 +150,7 @@ class SystemCheckDialog(QDialog):
         )
 
         self.report_edit.setPlainText(
-            "Running compatibility checks..."
+            sc_t("checking")
         )
 
         self.progress.setRange(
@@ -218,17 +219,22 @@ class SystemCheckDialog(QDialog):
                 sc_t("status_failed")
             )
 
+            diagnostic_result = CheckResult(
+                "System Check diagnostic process",
+                FAIL,
+                error,
+            )
+
             self._full_report = (
-                "LOCAL SCREEN TRANSLATOR - SYSTEM CHECK\n\n"
-                "The diagnostic process itself failed.\n\n"
-                f"Detected error:\n{error}\n\n"
-                "How to fix:\n"
-                "1. Restart Windows.\n"
-                "2. Run System Check again.\n"
-                "3. If the same error remains, search the web "
-                "using the exact error text above.\n"
-                "4. If application files are missing or blocked, "
-                "reinstall the complete application."
+                format_self_help_report(
+                    [diagnostic_result]
+                )
+                + "\n\n"
+                + sc_t("technical_details")
+                + "\n"
+                + format_report(
+                    [diagnostic_result]
+                )
             )
 
             self.report_edit.setPlainText(

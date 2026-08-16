@@ -8,6 +8,24 @@ Version: **1.0.0**
 **Languages:** English | [Русский](README_RU.md) | [Українська](README_UK.md) | [Deutsch](README_DE.md) | [Français](README_FR.md) | [Español](README_ES.md) | [Português (Brasil)](README_PT-BR.md) | [Polski](README_PL.md) | [简体中文](README_ZH-CN.md) | [日本語](README_JA.md) | [한국어](README_KO.md)
 
 
+## Screenshots
+
+### Word translation
+
+![Word translation in a game](docs/images/word_translation.png)
+
+### Paragraph translation
+
+![Paragraph translation in a game](docs/images/paragraph_translation.png)
+
+### Settings
+
+![Local Screen Translator settings](docs/images/settings.png)
+
+### System Check
+
+![Local Screen Translator System Check](docs/images/system_check.png)
+
 ## Main features
 
 - Translate the word under the mouse cursor with surrounding context.

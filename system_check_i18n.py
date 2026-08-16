@@ -354,6 +354,258 @@ SC_TRANSLATIONS.update({
 })
 
 
+# SYSTEM CHECK LANGUAGE BATCH 2
+SC_TRANSLATIONS.update({
+    "uk": {
+        "system_check": "Перевірка системи",
+        "description": (
+            "Перевіряє GPU, OCR, захоплення екрана, локальні ШІ-моделі, "
+            "вирівнювання тексту та синтез мовлення Windows."
+        ),
+        "ready_to_check": "Готово до перевірки.",
+        "checking": (
+            "Перевірка сумісності системи. "
+            "Тест ШІ-моделей може зайняти деякий час..."
+        ),
+        "placeholder": "Тут з’являться результати перевірки системи.",
+        "run_again": "Перевірити знову",
+        "copy_report": "Копіювати звіт",
+        "close": "Закрити",
+        "copied": "Скопійовано",
+        "status_ready": "Система готова — усі перевірки сумісності пройдено.",
+        "status_warnings": "Перевірку системи завершено з попередженнями.",
+        "status_problems": "Виявлено проблеми. Виконайте наведені нижче інструкції.",
+        "status_failed": "Не вдалося завершити перевірку системи.",
+        "technical_details": "ТЕХНІЧНІ ДАНІ",
+        "report_ready_title": "СИСТЕМА ГОТОВА",
+        "report_ready_line1": "Усі перевірки сумісності успішно пройдено.",
+        "report_ready_line2": "Local Screen Translator готовий до роботи.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - САМОСТІЙНА ДІАГНОСТИКА",
+        "report_detected": "Виявлено:",
+        "report_how_to_fix": "Як виправити:",
+        "report_search_web": "Для пошуку в Інтернеті:",
+        "report_after_steps": "Після виконання цих дій знову запустіть Перевірку системи.",
+    },
+
+    "cs": {
+        "system_check": "Kontrola systému",
+        "description": (
+            "Kontroluje GPU, OCR, zachytávání obrazovky, místní modely AI, "
+            "zarovnání textu a syntézu řeči Windows."
+        ),
+        "ready_to_check": "Připraveno ke kontrole.",
+        "checking": (
+            "Kontrola kompatibility systému. "
+            "Test modelů AI může chvíli trvat..."
+        ),
+        "placeholder": "Zde se zobrazí výsledky kontroly systému.",
+        "run_again": "Zkontrolovat znovu",
+        "copy_report": "Kopírovat zprávu",
+        "close": "Zavřít",
+        "copied": "Zkopírováno",
+        "status_ready": "Systém je připraven — všechny kontroly kompatibility byly úspěšné.",
+        "status_warnings": "Kontrola systému byla dokončena s upozorněními.",
+        "status_problems": "Byly nalezeny problémy. Postupujte podle pokynů níže.",
+        "status_failed": "Kontrolu systému se nepodařilo dokončit.",
+        "technical_details": "TECHNICKÉ PODROBNOSTI",
+        "report_ready_title": "SYSTÉM JE PŘIPRAVEN",
+        "report_ready_line1": "Všechny kontroly kompatibility byly úspěšné.",
+        "report_ready_line2": "Local Screen Translator je připraven k použití.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - SAMOSTATNÁ DIAGNOSTIKA",
+        "report_detected": "Zjištěno:",
+        "report_how_to_fix": "Jak problém vyřešit:",
+        "report_search_web": "Vyhledat na Internetu:",
+        "report_after_steps": "Po provedení těchto kroků spusťte kontrolu systému znovu.",
+    },
+
+    "sk": {
+        "system_check": "Kontrola systému",
+        "description": (
+            "Kontroluje GPU, OCR, snímanie obrazovky, lokálne modely AI, "
+            "zarovnanie textu a syntézu reči Windows."
+        ),
+        "ready_to_check": "Pripravené na kontrolu.",
+        "checking": (
+            "Kontrola kompatibility systému. "
+            "Test modelov AI môže chvíľu trvať..."
+        ),
+        "placeholder": "Tu sa zobrazia výsledky kontroly systému.",
+        "run_again": "Skontrolovať znova",
+        "copy_report": "Kopírovať správu",
+        "close": "Zavrieť",
+        "copied": "Skopírované",
+        "status_ready": "Systém je pripravený — všetky kontroly kompatibility boli úspešné.",
+        "status_warnings": "Kontrola systému bola dokončená s upozorneniami.",
+        "status_problems": "Boli nájdené problémy. Postupujte podľa pokynov nižšie.",
+        "status_failed": "Kontrolu systému sa nepodarilo dokončiť.",
+        "technical_details": "TECHNICKÉ PODROBNOSTI",
+        "report_ready_title": "SYSTÉM JE PRIPRAVENÝ",
+        "report_ready_line1": "Všetky kontroly kompatibility boli úspešné.",
+        "report_ready_line2": "Local Screen Translator je pripravený na použitie.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - SAMOSTATNÁ DIAGNOSTIKA",
+        "report_detected": "Zistené:",
+        "report_how_to_fix": "Ako problém vyriešiť:",
+        "report_search_web": "Vyhľadať na internete:",
+        "report_after_steps": "Po vykonaní týchto krokov spustite kontrolu systému znova.",
+    },
+
+    "da": {
+        "system_check": "Systemkontrol",
+        "description": (
+            "Kontrollerer GPU, OCR, skærmoptagelse, lokale AI-modeller, "
+            "tekstjustering og Windows-talesyntese."
+        ),
+        "ready_to_check": "Klar til kontrol.",
+        "checking": (
+            "Kontrollerer systemkompatibilitet. "
+            "Testen af AI-modeller kan tage lidt tid..."
+        ),
+        "placeholder": "Resultaterne af systemkontrollen vises her.",
+        "run_again": "Kontroller igen",
+        "copy_report": "Kopiér rapport",
+        "close": "Luk",
+        "copied": "Kopieret",
+        "status_ready": "Systemet er klar — alle kompatibilitetskontroller er bestået.",
+        "status_warnings": "Systemkontrollen blev gennemført med advarsler.",
+        "status_problems": "Der blev fundet problemer. Følg instruktionerne nedenfor.",
+        "status_failed": "Systemkontrollen kunne ikke gennemføres.",
+        "technical_details": "TEKNISKE DETALJER",
+        "report_ready_title": "SYSTEMET ER KLAR",
+        "report_ready_line1": "Alle kompatibilitetskontroller blev gennemført korrekt.",
+        "report_ready_line2": "Local Screen Translator er klar til brug.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - SELVHJÆLPSDIAGNOSTIK",
+        "report_detected": "Registreret:",
+        "report_how_to_fix": "Sådan løses problemet:",
+        "report_search_web": "Søg på internettet efter:",
+        "report_after_steps": "Kør systemkontrollen igen, når disse trin er udført.",
+    },
+
+    "fi": {
+        "system_check": "Järjestelmän tarkistus",
+        "description": (
+            "Tarkistaa GPU:n, OCR:n, näytönkaappauksen, paikalliset AI-mallit, "
+            "tekstin kohdistuksen ja Windowsin puhesynteesin."
+        ),
+        "ready_to_check": "Valmis tarkistukseen.",
+        "checking": (
+            "Tarkistetaan järjestelmän yhteensopivuutta. "
+            "AI-mallien testi voi kestää hetken..."
+        ),
+        "placeholder": "Järjestelmän tarkistuksen tulokset näkyvät tässä.",
+        "run_again": "Tarkista uudelleen",
+        "copy_report": "Kopioi raportti",
+        "close": "Sulje",
+        "copied": "Kopioitu",
+        "status_ready": "Järjestelmä on valmis — kaikki yhteensopivuustarkistukset läpäistiin.",
+        "status_warnings": "Järjestelmän tarkistus valmistui varoituksin.",
+        "status_problems": "Ongelmia havaittiin. Noudata alla olevia ohjeita.",
+        "status_failed": "Järjestelmän tarkistusta ei voitu suorittaa loppuun.",
+        "technical_details": "TEKNISET TIEDOT",
+        "report_ready_title": "JÄRJESTELMÄ ON VALMIS",
+        "report_ready_line1": "Kaikki yhteensopivuustarkistukset läpäistiin onnistuneesti.",
+        "report_ready_line2": "Local Screen Translator on käyttövalmis.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - OMATOIMINEN VIANMÄÄRITYS",
+        "report_detected": "Havaittu:",
+        "report_how_to_fix": "Korjausohje:",
+        "report_search_web": "Hae Internetistä:",
+        "report_after_steps": "Kun olet suorittanut nämä vaiheet, käynnistä järjestelmän tarkistus uudelleen.",
+    },
+
+    "sv": {
+        "system_check": "Systemkontroll",
+        "description": (
+            "Kontrollerar GPU, OCR, skärminspelning, lokala AI-modeller, "
+            "textjustering och Windows talsyntes."
+        ),
+        "ready_to_check": "Redo att kontrollera.",
+        "checking": (
+            "Kontrollerar systemkompatibiliteten. "
+            "Testet av AI-modeller kan ta en stund..."
+        ),
+        "placeholder": "Resultaten från systemkontrollen visas här.",
+        "run_again": "Kontrollera igen",
+        "copy_report": "Kopiera rapport",
+        "close": "Stäng",
+        "copied": "Kopierat",
+        "status_ready": "Systemet är klart — alla kompatibilitetskontroller godkändes.",
+        "status_warnings": "Systemkontrollen slutfördes med varningar.",
+        "status_problems": "Problem hittades. Följ instruktionerna nedan.",
+        "status_failed": "Systemkontrollen kunde inte slutföras.",
+        "technical_details": "TEKNISKA DETALJER",
+        "report_ready_title": "SYSTEMET ÄR KLART",
+        "report_ready_line1": "Alla kompatibilitetskontroller genomfördes utan fel.",
+        "report_ready_line2": "Local Screen Translator är redo att användas.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - SJÄLVHJÄLPSDIAGNOSTIK",
+        "report_detected": "Upptäckt:",
+        "report_how_to_fix": "Så här löser du problemet:",
+        "report_search_web": "Sök på Internet efter:",
+        "report_after_steps": "Kör systemkontrollen igen efter att du har utfört dessa steg.",
+    },
+
+    "no": {
+        "system_check": "Systemkontroll",
+        "description": (
+            "Kontrollerer GPU, OCR, skjermopptak, lokale AI-modeller, "
+            "tekstjustering og Windows talesyntese."
+        ),
+        "ready_to_check": "Klar til kontroll.",
+        "checking": (
+            "Kontrollerer systemkompatibiliteten. "
+            "Testen av AI-modeller kan ta litt tid..."
+        ),
+        "placeholder": "Resultatene fra systemkontrollen vises her.",
+        "run_again": "Kontroller på nytt",
+        "copy_report": "Kopier rapport",
+        "close": "Lukk",
+        "copied": "Kopiert",
+        "status_ready": "Systemet er klart — alle kompatibilitetskontroller ble bestått.",
+        "status_warnings": "Systemkontrollen ble fullført med advarsler.",
+        "status_problems": "Det ble funnet problemer. Følg instruksjonene nedenfor.",
+        "status_failed": "Systemkontrollen kunne ikke fullføres.",
+        "technical_details": "TEKNISKE DETALJER",
+        "report_ready_title": "SYSTEMET ER KLART",
+        "report_ready_line1": "Alle kompatibilitetskontroller ble fullført uten feil.",
+        "report_ready_line2": "Local Screen Translator er klar til bruk.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - SELVHJELPSDIAGNOSTIKK",
+        "report_detected": "Oppdaget:",
+        "report_how_to_fix": "Slik løser du problemet:",
+        "report_search_web": "Søk på Internett etter:",
+        "report_after_steps": "Kjør systemkontrollen på nytt etter at disse trinnene er utført.",
+    },
+
+    "nl": {
+        "system_check": "Systeemcontrole",
+        "description": (
+            "Controleert GPU, OCR, schermopname, lokale AI-modellen, "
+            "tekstuitlijning en Windows-spraaksynthese."
+        ),
+        "ready_to_check": "Klaar voor controle.",
+        "checking": (
+            "Systeemcompatibiliteit wordt gecontroleerd. "
+            "De test van de AI-modellen kan even duren..."
+        ),
+        "placeholder": "De resultaten van de systeemcontrole verschijnen hier.",
+        "run_again": "Opnieuw controleren",
+        "copy_report": "Rapport kopiëren",
+        "close": "Sluiten",
+        "copied": "Gekopieerd",
+        "status_ready": "Systeem gereed — alle compatibiliteitscontroles zijn geslaagd.",
+        "status_warnings": "Systeemcontrole voltooid met waarschuwingen.",
+        "status_problems": "Er zijn problemen gevonden. Volg de onderstaande instructies.",
+        "status_failed": "De systeemcontrole kon niet worden voltooid.",
+        "technical_details": "TECHNISCHE DETAILS",
+        "report_ready_title": "SYSTEEM GEREED",
+        "report_ready_line1": "Alle compatibiliteitscontroles zijn succesvol uitgevoerd.",
+        "report_ready_line2": "Local Screen Translator is klaar voor gebruik.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - ZELFHULPDIAGNOSE",
+        "report_detected": "Gedetecteerd:",
+        "report_how_to_fix": "Hoe dit op te lossen:",
+        "report_search_web": "Zoek op Internet naar:",
+        "report_after_steps": "Voer de systeemcontrole opnieuw uit nadat deze stappen zijn voltooid.",
+    },
+})
+
+
 def current_system_check_language() -> str:
     try:
         from user_settings import USER_SETTINGS

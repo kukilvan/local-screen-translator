@@ -1,10 +1,12 @@
-﻿# Local Screen Translator
+# Local Screen Translator
 
-Local Screen Translator is a Windows desktop application for translating text
-directly from games, applications, browsers and video without sending captured
-text to cloud AI services.
+**Offline screen translator, game translator and OCR translator for Windows.**
+Local Screen Translator translates text directly from games, applications, browsers and video while keeping OCR and translation processing on your PC.
 
 Version: **1.0.0**
+
+**Languages:** English | [Русский](README_RU.md) | [Українська](README_UK.md) | [Deutsch](README_DE.md) | [Français](README_FR.md) | [Español](README_ES.md) | [Português (Brasil)](README_PT-BR.md) | [Polski](README_PL.md) | [简体中文](README_ZH-CN.md) | [日本語](README_JA.md) | [한국어](README_KO.md)
+
 
 ## Main features
 

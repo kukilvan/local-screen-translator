@@ -30,8 +30,9 @@ def _hotkey_registration_error(
     return t(
         "error",
         error=(
-            f"Could not register hotkey {hotkey}. "
-            "The shortcut may already be used by another application."
+            f"LST-HOTKEY-001: Could not register hotkey {hotkey}. "
+            "The shortcut may already be used by another application. "
+            "Choose a different shortcut in Settings."
         ),
     )
 
@@ -88,7 +89,8 @@ def parse_hotkey(
 
             if not 1 <= function_number <= 24:
                 raise ValueError(
-                    f"Unsupported hotkey: {hotkey}"
+                    f"LST-HOTKEY-001: Unsupported hotkey: {hotkey}. "
+                    "Choose a supported shortcut in Settings."
                 )
 
             key_vk = (
@@ -99,12 +101,14 @@ def parse_hotkey(
 
         else:
             raise ValueError(
-                f"Unsupported hotkey: {hotkey}"
+                f"LST-HOTKEY-001: Unsupported hotkey: {hotkey}. "
+                "Choose a supported shortcut in Settings."
             )
 
     if key_vk is None:
         raise ValueError(
-            f"Hotkey has no key: {hotkey}"
+            f"LST-HOTKEY-001: Hotkey has no key: {hotkey}. "
+            "Choose a complete shortcut in Settings."
         )
 
     return (
@@ -181,56 +185,72 @@ class GlobalHotkeys(QObject):
     def _message_loop(self) -> None:
         user32 = ctypes.windll.user32
         kernel32 = ctypes.windll.kernel32
-        self._thread_id = int(kernel32.GetCurrentThreadId())
-
-        (
-            word_hotkey_mods,
-            word_hotkey_vk,
-        ) = parse_hotkey(
-            USER_SETTINGS.word_hotkey
+        self._thread_id = int(
+            kernel32.GetCurrentThreadId()
         )
 
-        registered_word = bool(
-            user32.RegisterHotKey(
-                None,
-                HOTKEY_WORD,
-                word_hotkey_mods,
-                word_hotkey_vk,
-            )
-        )
-        (
-            paragraph_hotkey_mods,
-            paragraph_hotkey_vk,
-        ) = parse_hotkey(
-            USER_SETTINGS.paragraph_hotkey
-        )
-
-        registered_paragraph = bool(
-            user32.RegisterHotKey(
-                None,
-                HOTKEY_PARAGRAPH,
-                paragraph_hotkey_mods,
-                paragraph_hotkey_vk,
-            )
-        )
-
-        if not registered_word:
-            self.error.emit(
-                _hotkey_registration_error(
-                    USER_SETTINGS.word_hotkey
-                )
-            )
-
-        if not registered_paragraph:
-            self.error.emit(
-                _hotkey_registration_error(
-                    USER_SETTINGS.paragraph_hotkey
-                )
-            )
-
-        msg = MSG()
+        registered_word = False
+        registered_paragraph = False
 
         try:
+            try:
+                (
+                    word_hotkey_mods,
+                    word_hotkey_vk,
+                ) = parse_hotkey(
+                    USER_SETTINGS.word_hotkey
+                )
+
+                (
+                    paragraph_hotkey_mods,
+                    paragraph_hotkey_vk,
+                ) = parse_hotkey(
+                    USER_SETTINGS.paragraph_hotkey
+                )
+
+            except ValueError as exc:
+                self.error.emit(
+                    t(
+                        "error",
+                        error=str(exc),
+                    )
+                )
+                return
+
+            registered_word = bool(
+                user32.RegisterHotKey(
+                    None,
+                    HOTKEY_WORD,
+                    word_hotkey_mods,
+                    word_hotkey_vk,
+                )
+            )
+
+            registered_paragraph = bool(
+                user32.RegisterHotKey(
+                    None,
+                    HOTKEY_PARAGRAPH,
+                    paragraph_hotkey_mods,
+                    paragraph_hotkey_vk,
+                )
+            )
+
+            if not registered_word:
+                self.error.emit(
+                    _hotkey_registration_error(
+                        USER_SETTINGS.word_hotkey
+                    )
+                )
+
+            if not registered_paragraph:
+                self.error.emit(
+                    _hotkey_registration_error(
+                        USER_SETTINGS.paragraph_hotkey
+                    )
+                )
+
+            msg = MSG()
+
             while not self._stop_requested.is_set():
                 result = user32.GetMessageW(
                     ctypes.byref(msg),
@@ -238,17 +258,32 @@ class GlobalHotkeys(QObject):
                     0,
                     0,
                 )
+
                 if result <= 0:
                     break
 
                 if msg.message == WM_HOTKEY:
                     if msg.wParam == HOTKEY_WORD:
-                        self.triggered.emit("word")
+                        self.triggered.emit(
+                            "word"
+                        )
+
                     elif msg.wParam == HOTKEY_PARAGRAPH:
-                        self.triggered.emit("paragraph")
+                        self.triggered.emit(
+                            "paragraph"
+                        )
+
         finally:
             if registered_word:
-                user32.UnregisterHotKey(None, HOTKEY_WORD)
+                user32.UnregisterHotKey(
+                    None,
+                    HOTKEY_WORD,
+                )
+
             if registered_paragraph:
-                user32.UnregisterHotKey(None, HOTKEY_PARAGRAPH)
+                user32.UnregisterHotKey(
+                    None,
+                    HOTKEY_PARAGRAPH,
+                )
+
             self._thread_id = None

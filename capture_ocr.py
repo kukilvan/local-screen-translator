@@ -210,6 +210,7 @@ class ScreenOCR:
         ):
             if not model_dir.is_dir():
                 raise RuntimeError(
+                    "LST-FILE-001: "
                     f"{label} not found: {model_dir}"
                 )
 

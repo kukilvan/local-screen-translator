@@ -65,19 +65,29 @@ class OllamaClient:
 
         except requests.RequestException as exc:
             raise OllamaError(
-                "Не удалось обратиться к локальной Ollama на 127.0.0.1:11434. "
-                "Проверь, что Ollama запущена и модель загружена."
+                "LST-AI-001: Could not communicate with the local "
+                f"Ollama server at {self.base_url}. "
+                f"{type(exc).__name__}: {exc}"
             ) from exc
         except ValueError as exc:
-            raise OllamaError("Ollama вернула некорректный JSON.") from exc
+            raise OllamaError(
+                "LST-AI-001: Ollama returned invalid JSON from "
+                f"{self.base_url}."
+            ) from exc
 
         try:
             text = data["message"]["content"].strip()
         except (KeyError, TypeError, AttributeError) as exc:
-            raise OllamaError(f"Неожиданный ответ Ollama: {data!r}") from exc
+            raise OllamaError(
+                "LST-AI-001: Ollama returned an unexpected response: "
+                f"{data!r}"
+            ) from exc
 
         if not text:
-            raise OllamaError("Ollama вернула пустой ответ.")
+            raise OllamaError(
+                "LST-AI-001: Ollama returned an empty response "
+                f"for model {self.model}."
+            )
         return text
 
     def translate_word(self, word: str, context: str) -> str:
@@ -100,15 +110,15 @@ IMPORTANT:
 - Pay attention to articles and grammar to distinguish nouns, verbs, adjectives, etc.
 - Treat the supplied TARGET WORD as correct unless the surrounding context gives very strong evidence of an OCR error.
 - Silently correct obvious OCR errors only when virtually certain.
-- For RPG/fantasy/game terminology, use the natural established Russian equivalent.
-- Never write notes in English.
+- For RPG/fantasy/game terminology, use the natural established {self.target_language} equivalent.
+- Any optional note must be written in {self.target_language}.
 - Never translate the whole surrounding sentence.
 - Never explain your reasoning.
 
 Output EXACTLY:
 
-<English target word> → <best Russian translation>
-<optional very short Russian context note>
+<English target word> → <best {self.target_language} translation>
+<optional very short {self.target_language} context note>
 
 The second line is optional and must be no longer than one short sentence.
 """.strip()
@@ -133,26 +143,20 @@ It may contain minor OCR errors. Correct only obvious OCR mistakes from context.
 The marker <<<CURSOR>>> appears immediately before the English word
 the user is pointing at.
 
-Translate ALL supplied text into natural Russian.
+Translate ALL supplied text into natural {self.target_language}.
 
 Rules:
 - Do not summarize, shorten, omit, or explain anything.
 - Preserve meaning, tone, names, RPG terminology and dialogue style.
 - Translate the entire supplied text.
-- The marker <<<CURSOR>>> must appear exactly ONCE in your Russian translation.
-- Move <<<CURSOR>>> so that it appears immediately before the Russian word
-  or shortest Russian phrase corresponding to the English word it marked.
+- The marker <<<CURSOR>>> must appear exactly ONCE in your {self.target_language} translation.
+- Move <<<CURSOR>>> so that it appears immediately before the {self.target_language} word
+  or shortest {self.target_language} phrase corresponding to the English word it marked.
 - Do not translate the marker itself.
-- Output ONLY the translated Russian text.
+- Output ONLY the translated {self.target_language} text.
 - Do not add headings, notes or any other fields.
 
-Example:
 
-Input:
-In the <<<CURSOR>>> game, the player controls a cleric.
-
-Output:
-В этой <<<CURSOR>>> игре игрок управляет клериком.
 """.strip()
 
         return self._chat(system, text, num_predict=520)

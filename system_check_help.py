@@ -1,6 +1,7 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from system_check import CheckResult, FAIL, WARN
+from system_check_i18n import current_system_check_language
 
 
 def _entry(
@@ -225,6 +226,169 @@ def help_for_result(result: CheckResult) -> dict | None:
     )
 
 
+
+RU_HELP = {
+    "LST-SYS-001": {
+        "title": "Неподдерживаемая конфигурация Windows",
+        "actions": [
+            "Используйте 64-битную версию Windows 10 или Windows 11.",
+            "Установите все доступные обновления Windows.",
+            "Перезагрузите Windows и снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-GPU-001": {
+        "title": "Не удалось обнаружить NVIDIA GPU или драйвер",
+        "actions": [
+            "Откройте Диспетчер устройств и убедитесь, что видеокарта NVIDIA определяется без ошибок.",
+            "Установите или переустановите официальный драйвер NVIDIA.",
+            "Перезагрузите Windows и снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-GPU-002": {
+        "title": "Драйвер NVIDIA слишком старый",
+        "actions": [
+            "Скачайте и установите последнюю версию драйвера NVIDIA для вашей видеокарты.",
+            "После установки перезагрузите Windows.",
+            "Снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-GPU-003": {
+        "title": "Видеокарта NVIDIA несовместима",
+        "actions": [
+            "Эта видеокарта не может запустить требуемую CUDA/Paddle среду.",
+            "Используйте более новую совместимую видеокарту NVIDIA.",
+            "Не устанавливайте CUDA Toolkit вручную — приложение содержит собственную среду.",
+        ],
+    },
+
+    "LST-GPU-004": {
+        "title": "Недостаточно видеопамяти",
+        "actions": [
+            "Закройте игры, браузеры и другие программы, активно использующие GPU.",
+            "Снова запустите Проверку системы и посмотрите количество свободной VRAM.",
+            "Если перевод всё равно не работает, потребуется NVIDIA GPU с большим объёмом памяти.",
+        ],
+    },
+
+    "LST-GPU-010": {
+        "title": "Обнаружено несколько видеокарт NVIDIA",
+        "actions": [
+            "Текущая версия приложения использует NVIDIA GPU 0.",
+            "Посмотрите в технических данных, какая видеокарта указана как gpu:0.",
+            "Если используется не та видеокарта, измените настройки GPU в Windows/NVIDIA и перезапустите приложение.",
+        ],
+    },
+
+    "LST-CAP-001": {
+        "title": "Не удалось правильно захватить экран",
+        "actions": [
+            "Убедитесь, что нужный монитор подключён к видеокарте NVIDIA.",
+            "Попробуйте режим игры «Безрамочное окно / Borderless Windowed».",
+            "После изменения мониторов или настроек экрана перезапустите Local Screen Translator.",
+            "Снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-NET-001": {
+        "title": "Локальный порт 11435 занят другой программой",
+        "actions": [
+            "Закройте другие локальные AI-программы и запущенные экземпляры Ollama.",
+            "Перезапустите Local Screen Translator.",
+            "Если проблема остаётся, перезагрузите Windows и запустите приложение до других AI-программ.",
+        ],
+    },
+
+    "LST-TTS-001": {
+        "title": "Не найден подходящий английский голос Microsoft",
+        "actions": [
+            "Откройте настройки Local Screen Translator.",
+            "Выберите английский голосовой пакет Microsoft.",
+            "Нажмите кнопку установки голоса Microsoft.",
+            "Если потребуется, перезагрузите Windows.",
+        ],
+    },
+
+    "LST-CUDA-001": {
+        "title": "Не удалось запустить GPU OCR",
+        "actions": [
+            "Обновите или переустановите драйвер NVIDIA.",
+            "Перезагрузите Windows.",
+            "Закройте программы, активно использующие видеопамять.",
+            "Снова запустите Проверку системы.",
+            "Не устанавливайте Python, PaddlePaddle или отдельный CUDA Toolkit вручную.",
+        ],
+    },
+
+    "LST-FILE-001": {
+        "title": "Отсутствует необходимый файл приложения",
+        "actions": [
+            "Не скачивайте отдельные модели или DLL вручную.",
+            "Проверьте журнал защиты Windows Security — файл мог попасть в карантин.",
+            "Удалите Local Screen Translator.",
+            "Установите приложение заново, положив Setup.exe и все файлы .bin рядом друг с другом.",
+            "Снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-ALIGN-001": {
+        "title": "Не удалось запустить компонент выравнивания текста",
+        "actions": [
+            "Проверьте журнал защиты Windows Security — LSTAlignWorker.exe мог быть заблокирован.",
+            "Если файл был удалён, переустановите приложение полностью.",
+            "Перезагрузите Windows и снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-DATA-001": {
+        "title": "Приложение не может сохранить настройки",
+        "actions": [
+            "Убедитесь, что ваша учётная запись Windows имеет доступ к папке AppData.",
+            "Проверьте Controlled Folder Access и другое защитное ПО.",
+            "Снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-AI-001": {
+        "title": "Не удалось запустить локальные модели перевода",
+        "actions": [
+            "Обновите драйвер NVIDIA и перезагрузите Windows.",
+            "Закройте другие AI-программы и приложения, активно использующие GPU.",
+            "Проверьте журнал защиты Windows Security.",
+            "Если отсутствуют модели, полностью переустановите приложение.",
+            "Снова запустите Проверку системы.",
+        ],
+    },
+
+    "LST-GEN-001": {
+        "title": "Проверка системы обнаружила проблему",
+        "actions": [
+            "Перезагрузите Windows и снова запустите Проверку системы.",
+            "Используйте точный текст ошибки из технических данных для поиска в интернете.",
+            "Если отсутствуют файлы приложения, полностью переустановите его.",
+        ],
+    },
+}
+
+
+def _localize_help_item(item: dict) -> dict:
+    if current_system_check_language() != "ru":
+        return item
+
+    translated = RU_HELP.get(item["code"])
+
+    if not translated:
+        return item
+
+    result = dict(item)
+    result["title"] = translated["title"]
+    result["actions"] = translated["actions"]
+
+    return result
+
+
 def format_self_help_report(
     results: list[CheckResult],
 ) -> str:
@@ -235,14 +399,29 @@ def format_self_help_report(
     ]
 
     if not problems:
+        if current_system_check_language() == "ru":
+            return (
+                "СИСТЕМА ГОТОВА\n\n"
+                "Все проверки совместимости успешно пройдены.\n"
+                "Local Screen Translator готов к работе."
+            )
+
         return (
             "SYSTEM READY\n\n"
             "All compatibility checks passed.\n"
             "Local Screen Translator is ready to use."
         )
 
+    russian = (
+        current_system_check_language() == "ru"
+    )
+
     lines = [
-        "LOCAL SCREEN TRANSLATOR - SELF-HELP REPORT",
+        (
+            "LOCAL SCREEN TRANSLATOR - САМОСТОЯТЕЛЬНАЯ ДИАГНОСТИКА"
+            if russian
+            else "LOCAL SCREEN TRANSLATOR - SELF-HELP REPORT"
+        ),
         "",
     ]
 
@@ -251,16 +430,25 @@ def format_self_help_report(
         start=1,
     ):
         help_item = help_for_result(result)
+        help_item = _localize_help_item(help_item)
 
         lines.append(
             f"{number}. [{result.status}] "
             f"{help_item['code']} - {help_item['title']}"
         )
         lines.append(
-            f"Detected: {result.detail}"
+            (
+                f"Обнаружено: {result.detail}"
+                if russian
+                else f"Detected: {result.detail}"
+            )
         )
         lines.append("")
-        lines.append("How to fix:")
+        lines.append(
+            "Как исправить:"
+            if russian
+            else "How to fix:"
+        )
 
         for index, action in enumerate(
             help_item["actions"],
@@ -272,7 +460,9 @@ def format_self_help_report(
 
         lines.append("")
         lines.append(
-            "Search the web for:"
+            "Для поиска в интернете:"
+            if russian
+            else "Search the web for:"
         )
         lines.append(
             f'  "{help_item["search_terms"]}"'
@@ -282,8 +472,14 @@ def format_self_help_report(
         lines.append("")
 
     lines.append(
-        "After completing the suggested steps, "
-        "run System Check again."
+        (
+            "После выполнения указанных действий "
+            "снова запустите Проверку системы."
+            if russian
+            else
+            "After completing the suggested steps, "
+            "run System Check again."
+        )
     )
 
     return "\n".join(lines)

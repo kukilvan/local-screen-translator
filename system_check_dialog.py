@@ -23,6 +23,7 @@ from system_check import (
     run_deep_system_check,
 )
 from system_check_help import format_self_help_report
+from system_check_i18n import sc_t
 
 
 class SystemCheckDialog(QDialog):
@@ -42,7 +43,7 @@ class SystemCheckDialog(QDialog):
         self.has_fail = False
 
         self.setWindowTitle(
-            "Local Screen Translator - System Check"
+            f"Local Screen Translator - {sc_t('system_check')}"
         )
         self.setMinimumSize(
             760,
@@ -52,20 +53,18 @@ class SystemCheckDialog(QDialog):
         root = QVBoxLayout(self)
 
         title = QLabel(
-            "<b>System compatibility check</b>"
+            f"<b>{sc_t('system_check')}</b>"
         )
         root.addWidget(title)
 
         description = QLabel(
-            "Local Screen Translator will test the GPU, "
-            "CUDA OCR, screen capture, local AI models, "
-            "alignment component and Windows speech."
+            sc_t("description")
         )
         description.setWordWrap(True)
         root.addWidget(description)
 
         self.status_label = QLabel(
-            "Ready to check."
+            sc_t("ready_to_check")
         )
         self.status_label.setWordWrap(True)
         root.addWidget(
@@ -82,7 +81,7 @@ class SystemCheckDialog(QDialog):
         self.report_edit = QTextEdit()
         self.report_edit.setReadOnly(True)
         self.report_edit.setPlaceholderText(
-            "System Check results will appear here."
+            sc_t("placeholder")
         )
         root.addWidget(
             self.report_edit,
@@ -92,13 +91,13 @@ class SystemCheckDialog(QDialog):
         buttons = QHBoxLayout()
 
         self.run_button = QPushButton(
-            "Run again"
+            sc_t("run_again")
         )
         self.copy_button = QPushButton(
-            "Copy report"
+            sc_t("copy_report")
         )
         self.close_button = QPushButton(
-            "Close"
+            sc_t("close")
         )
 
         self.copy_button.setEnabled(False)
@@ -146,8 +145,7 @@ class SystemCheckDialog(QDialog):
         self.check_completed = False
 
         self.status_label.setText(
-            "Checking your system. "
-            "The AI model test can take a little while..."
+            sc_t("checking")
         )
 
         self.report_edit.setPlainText(
@@ -217,7 +215,7 @@ class SystemCheckDialog(QDialog):
             )
 
             self.status_label.setText(
-                "System Check could not complete."
+                sc_t("status_failed")
             )
 
             self._full_report = (
@@ -257,18 +255,17 @@ class SystemCheckDialog(QDialog):
 
         if has_fail:
             self.status_label.setText(
-                "Problems were found. "
-                "Follow the instructions below."
+                sc_t("status_problems")
             )
 
         elif has_warn:
             self.status_label.setText(
-                "System Check completed with warnings."
+                sc_t("status_warnings")
             )
 
         else:
             self.status_label.setText(
-                "System ready - all compatibility checks passed."
+                sc_t("status_ready")
             )
 
         self_help = format_self_help_report(
@@ -283,7 +280,7 @@ class SystemCheckDialog(QDialog):
             self_help
             + "\n\n"
             + "=" * 60
-            + "\nTECHNICAL DETAILS\n"
+            + f"\n{sc_t('technical_details')}\n"
             + "=" * 60
             + "\n\n"
             + technical
@@ -317,7 +314,7 @@ class SystemCheckDialog(QDialog):
         )
 
         self.copy_button.setText(
-            "Copied"
+            sc_t("copied")
         )
 
         from PySide6.QtCore import QTimer
@@ -325,6 +322,6 @@ class SystemCheckDialog(QDialog):
         QTimer.singleShot(
             1500,
             lambda: self.copy_button.setText(
-                "Copy report"
+                sc_t("copy_report")
             ),
         )

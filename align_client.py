@@ -12,7 +12,7 @@ class AlignClient:
 
         if not BERT_MODEL_DIR.is_dir():
             raise RuntimeError(
-                f"Bundled BERT model not found: {BERT_MODEL_DIR}"
+                f"LST-FILE-001: Bundled BERT model not found: {BERT_MODEL_DIR}"
             )
 
         # Release path: prefer the standalone PyInstaller worker.
@@ -32,14 +32,14 @@ class AlignClient:
 
             if not python_exe.is_file():
                 raise RuntimeError(
-                    "SimAlign runtime not found. "
+                    "LST-ALIGN-001: SimAlign runtime not found. "
                     f"Expected standalone worker at {ALIGN_WORKER_EXE} "
                     f"or development Python at {python_exe}"
                 )
 
             if not worker_script.is_file():
                 raise RuntimeError(
-                    f"SimAlign worker script not found: {worker_script}"
+                    f"LST-ALIGN-001: SimAlign worker script not found: {worker_script}"
                 )
 
             command = [
@@ -81,16 +81,22 @@ class AlignClient:
         if not ready_line:
             error = self.process.stderr.read()
             raise RuntimeError(
-                "SimAlign worker failed to start.\n"
+                "LST-ALIGN-001: SimAlign worker failed to start.\n"
                 f"Worker: {worker_description}\n"
                 f"{error}"
             )
 
-        ready = json.loads(ready_line)
+        try:
+            ready = json.loads(ready_line)
+        except (json.JSONDecodeError, TypeError) as exc:
+            raise RuntimeError(
+                "LST-ALIGN-001: SimAlign worker returned invalid "
+                f"startup JSON: {ready_line!r}"
+            ) from exc
 
         if ready.get("status") != "ready":
             raise RuntimeError(
-                f"Unexpected worker response: {ready}"
+                f"LST-ALIGN-001: Unexpected SimAlign startup response: {ready}"
             )
 
     def align(
@@ -105,32 +111,48 @@ class AlignClient:
             "target_index": target_index,
         }
 
-        self.process.stdin.write(
-            json.dumps(
-                request,
-                ensure_ascii=True,
+        try:
+            self.process.stdin.write(
+                json.dumps(
+                    request,
+                    ensure_ascii=True,
+                )
+                + "\n"
             )
-            + "\n"
-        )
 
-        self.process.stdin.flush()
+            self.process.stdin.flush()
+
+        except (BrokenPipeError, OSError, ValueError) as exc:
+            raise RuntimeError(
+                "LST-ALIGN-001: Could not send a request to "
+                f"the SimAlign worker: {exc}"
+            ) from exc
 
         response_line = self.process.stdout.readline()
 
         if not response_line:
             error = self.process.stderr.read()
             raise RuntimeError(
-                f"SimAlign worker stopped:\n{error}"
+                f"LST-ALIGN-001: SimAlign worker stopped:\n{error}"
             )
 
-        response = json.loads(response_line)
+        try:
+            response = json.loads(response_line)
+        except (json.JSONDecodeError, TypeError) as exc:
+            raise RuntimeError(
+                "LST-ALIGN-001: SimAlign worker returned invalid "
+                f"response JSON: {response_line!r}"
+            ) from exc
 
         if response.get("status") != "ok":
+            worker_error = response.get(
+                "error",
+                "Unknown SimAlign error",
+            )
+
             raise RuntimeError(
-                response.get(
-                    "error",
-                    "Unknown SimAlign error",
-                )
+                "LST-ALIGN-001: SimAlign worker error: "
+                f"{worker_error}"
             )
 
         return response

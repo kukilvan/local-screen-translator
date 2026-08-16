@@ -271,8 +271,9 @@ class ScreenOCR:
             and out_top <= cursor_gy < out_bottom
         ):
             raise RuntimeError(
-                "Курсор находится не на том мониторе, который захватывает DXcam. "
-                "Проверь capture_device_idx / capture_output_idx в config.py."
+                "LST-CAP-001: Cursor is outside the monitor currently "
+                "captured by DXcam. Check capture_device_idx / "
+                "capture_output_idx in config.py."
             )
 
         out_w = out_right - out_left
@@ -306,7 +307,7 @@ class ScreenOCR:
 
         if frame is None:
             raise RuntimeError(
-                "DXcam не получил свежий кадр с экрана."
+                "LST-CAP-001: DXcam did not receive a fresh frame from the screen."
             )
 
         cursor_local = (float(cx - left), float(cy - top))
@@ -549,7 +550,7 @@ class ScreenOCR:
             )
 
             raise RuntimeError(
-                "PaddleOCR не нашёл текст рядом с курсором."
+                "PaddleOCR found no text near the cursor."
             )
 
         return OCRSnapshot(
@@ -613,7 +614,7 @@ class ScreenOCR:
 
 def choose_word(snapshot: OCRSnapshot) -> WordBox:
     if not snapshot.words:
-        raise RuntimeError("OCR не нашёл текста рядом с курсором.")
+        raise RuntimeError("OCR found no text near the cursor.")
 
     x, y = snapshot.cursor_x, snapshot.cursor_y
 
@@ -730,7 +731,7 @@ def choose_word(snapshot: OCRSnapshot) -> WordBox:
     )
 
     if _distance_to_rect(x, y, nearest.rect) > float(SETTINGS.max_word_distance_px):
-        raise RuntimeError("Рядом с курсором не найдено слово.")
+        raise RuntimeError("No OCR word was found near the cursor.")
 
     return nearest
 
@@ -775,7 +776,7 @@ def choose_paragraph(
     if not snapshot.lines:
         if snapshot.text:
             return f"<<<CURSOR>>> {snapshot.text}"[:5000]
-        raise RuntimeError("OCR не нашёл текст для перевода.")
+        raise RuntimeError("OCR found no text to translate.")
 
     target = choose_word(snapshot)
 
@@ -993,7 +994,7 @@ def choose_paragraph(
 
     if not result:
         raise RuntimeError(
-            "Не удалось собрать текст рядом с курсором."
+            "Could not build a text block near the cursor."
         )
 
     if return_rect:

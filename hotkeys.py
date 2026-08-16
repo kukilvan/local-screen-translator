@@ -14,6 +14,7 @@ from config import (
     SETTINGS,
 )
 from user_settings import USER_SETTINGS
+from ui_i18n import t
 
 
 WM_HOTKEY = 0x0312
@@ -21,6 +22,20 @@ WM_QUIT = 0x0012
 
 HOTKEY_WORD = 1
 HOTKEY_PARAGRAPH = 2
+
+
+def _hotkey_registration_error(
+    hotkey: str,
+) -> str:
+    return t(
+        "error",
+        error=(
+            f"Could not register hotkey {hotkey}. "
+            "The shortcut may already be used by another application."
+        ),
+    )
+
+
 def parse_hotkey(
     hotkey: str,
 ) -> tuple[int, int]:
@@ -201,13 +216,16 @@ class GlobalHotkeys(QObject):
 
         if not registered_word:
             self.error.emit(
-                "Не удалось зарегистрировать Ctrl+Alt+Space. "
-                "Возможно, комбинация занята другой программой."
+                _hotkey_registration_error(
+                    USER_SETTINGS.word_hotkey
+                )
             )
+
         if not registered_paragraph:
             self.error.emit(
-                "Не удалось зарегистрировать Ctrl+Alt+Shift+Space. "
-                "Возможно, комбинация занята другой программой."
+                _hotkey_registration_error(
+                    USER_SETTINGS.paragraph_hotkey
+                )
             )
 
         msg = MSG()

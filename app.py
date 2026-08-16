@@ -376,7 +376,10 @@ class TranslatorController(QObject):
 
                 if not dictionary_translation:
                     raise RuntimeError(
-                        f"Не удалось перевести {source_span!r}"
+                        t(
+                            "translation_failed",
+                            text=source_span,
+                        )
                     )
 
                 translated = (
@@ -546,10 +549,10 @@ class TranslatorController(QObject):
 
     @staticmethod
     def _friendly_error(exc: Exception) -> str:
-        if isinstance(exc, OllamaError):
-            return str(exc)
-
-        return f"Ошибка: {exc}"
+        return t(
+            "error",
+            error=str(exc),
+        )
 
 
     @Slot(int, str, int, int, object, object)
@@ -778,7 +781,10 @@ def main() -> int:
         print("", flush=True)
 
         hud.show_message(
-            f"Ошибка запуска: {exc}"
+            t(
+                "startup_error",
+                error=str(exc),
+            )
         )
         return app.exec()
 

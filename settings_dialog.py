@@ -118,12 +118,11 @@ class SettingsDialog(QDialog):
         )
 
         self.voice_pack_combo = QComboBox()
+        self._refresh_voice_pack_combo()
 
-        for locale, _display_name in ENGLISH_VOICE_PACKS:
-            self.voice_pack_combo.addItem(
-                locale,
-                locale,
-            )
+        self.voice_pack_combo.currentIndexChanged.connect(
+            self._update_voice_pack_install_state
+        )
 
         form_layout.addRow(
             t("microsoft_voice_pack"),
@@ -137,6 +136,8 @@ class SettingsDialog(QDialog):
         self.install_voice_button.clicked.connect(
             self._install_selected_voice_pack
         )
+
+        self._update_voice_pack_install_state()
 
         form_layout.addRow(
             "",
@@ -299,6 +300,76 @@ class SettingsDialog(QDialog):
             index
         )
 
+    def _installed_voice_locales(self) -> set[str]:
+        return {
+            voice["language"]
+            for voice in get_installed_english_voices()
+        }
+
+    def _refresh_voice_pack_combo(self) -> None:
+        if not hasattr(
+            self,
+            "voice_pack_combo",
+        ):
+            return
+
+        selected_locale = (
+            self.voice_pack_combo.currentData()
+            if self.voice_pack_combo.count()
+            else None
+        )
+
+        installed = self._installed_voice_locales()
+
+        self.voice_pack_combo.blockSignals(True)
+        self.voice_pack_combo.clear()
+
+        for locale, display_name in ENGLISH_VOICE_PACKS:
+            if locale in installed:
+                label = (
+                    f"✓ {display_name} ({locale})"
+                )
+            else:
+                label = (
+                    f"{display_name} ({locale})"
+                )
+
+            self.voice_pack_combo.addItem(
+                label,
+                locale,
+            )
+
+        if selected_locale:
+            index = self.voice_pack_combo.findData(
+                selected_locale
+            )
+
+            if index >= 0:
+                self.voice_pack_combo.setCurrentIndex(
+                    index
+                )
+
+        self.voice_pack_combo.blockSignals(False)
+
+    def _update_voice_pack_install_state(self) -> None:
+        if not hasattr(
+            self,
+            "install_voice_button",
+        ):
+            return
+
+        locale = self.voice_pack_combo.currentData()
+
+        installed = (
+            locale
+            in self._installed_voice_locales()
+        )
+
+        self.install_voice_button.setEnabled(
+            bool(locale)
+            and not installed
+        )
+
     def _install_selected_voice_pack(self) -> None:
         locale = self.voice_pack_combo.currentData()
 
@@ -375,6 +446,8 @@ class SettingsDialog(QDialog):
 
         if result.get("ok"):
             self._refresh_voice_combo()
+            self._refresh_voice_pack_combo()
+            self._update_voice_pack_install_state()
 
             if result.get(
                 "restart_needed"

@@ -5,6 +5,9 @@ from system_check_i18n import (
     current_system_check_language,
     sc_t,
 )
+from system_check_help_translations import (
+    HELP_TRANSLATIONS_EXTRA,
+)
 
 
 def _entry(
@@ -378,6 +381,7 @@ RU_HELP = {
 
 HELP_TRANSLATIONS = {
     "ru": RU_HELP,
+    **HELP_TRANSLATIONS_EXTRA,
 }
 
 

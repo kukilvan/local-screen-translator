@@ -45,21 +45,58 @@ class TranslationPipeline:
             f"of the sentence: {text}"
         )
 
-        response = requests.post(
-            self.ollama_url,
-            json={
-                "model": self.model,
-                "system": system_prompt,
-                "prompt": translation_prompt,
-                "stream": False,
-                "keep_alive": "10m",
-            },
-            timeout=60,
+        try:
+            response = requests.post(
+                self.ollama_url,
+                json={
+                    "model": self.model,
+                    "system": system_prompt,
+                    "prompt": translation_prompt,
+                    "stream": False,
+                    "keep_alive": "10m",
+                },
+                timeout=60,
+            )
+
+            response.raise_for_status()
+
+        except requests.RequestException as exc:
+            raise RuntimeError(
+                "LST-AI-001: Could not communicate with the "
+                f"Riva translation model at {self.ollama_url}. "
+                f"{type(exc).__name__}: {exc}"
+            ) from exc
+
+        try:
+            data = response.json()
+        except ValueError as exc:
+            raise RuntimeError(
+                "LST-AI-001: Riva returned invalid JSON."
+            ) from exc
+
+        if not isinstance(data, dict):
+            raise RuntimeError(
+                "LST-AI-001: Riva returned an unexpected response."
+            )
+
+        translation = data.get(
+            "response",
+            "",
         )
 
-        response.raise_for_status()
+        if not isinstance(translation, str):
+            raise RuntimeError(
+                "LST-AI-001: Riva returned an invalid translation value."
+            )
 
-        return response.json()["response"].strip()
+        translation = translation.strip()
+
+        if not translation:
+            raise RuntimeError(
+                "LST-AI-001: Riva returned an empty translation."
+            )
+
+        return translation
 
     @staticmethod
     def _choose_alignment(alignments):
@@ -126,6 +163,42 @@ class TranslationPipeline:
 
         return []
 
+    @staticmethod
+    def _find_phrase_indices(
+        text_tokens,
+        phrase_tokens,
+    ):
+        if not text_tokens or not phrase_tokens:
+            return []
+
+        text_folded = [
+            token.casefold()
+            for token in text_tokens
+        ]
+
+        phrase_folded = [
+            token.casefold()
+            for token in phrase_tokens
+        ]
+
+        size = len(phrase_folded)
+
+        for start in range(
+            len(text_folded) - size + 1
+        ):
+            if (
+                text_folded[start:start + size]
+                == phrase_folded
+            ):
+                return list(
+                    range(
+                        start,
+                        start + size,
+                    )
+                )
+
+        return []
+
     def translate_with_alignment(
         self,
         text: str,
@@ -148,8 +221,7 @@ class TranslationPipeline:
 
 
         source_span = logic_result["source_span"]
-
-        source_span = logic_result["source_span"]
+        dictionary_translation = logic_result["translation"]
 
         src_tokens = self.tokenize(text)
         trg_tokens = self.tokenize(translation)
@@ -269,6 +341,16 @@ class TranslationPipeline:
         target_indices = sorted(
             target_index_set
         )
+
+        if not target_indices:
+            dictionary_tokens = self.tokenize(
+                dictionary_translation
+            )
+
+            target_indices = self._find_phrase_indices(
+                trg_tokens,
+                dictionary_tokens,
+            )
 
         target_words = [
             trg_tokens[i]

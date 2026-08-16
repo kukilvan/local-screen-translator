@@ -99,47 +99,65 @@ SENTENCE_TRANSLATION:
 {sentence_translation}
 """.strip()
 
-        response = requests.post(
-            self.ollama_url,
-            json={
-                "model": self.model,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": self._build_system_prompt(
-                            target_language
-                        ),
+        try:
+            response = requests.post(
+                self.ollama_url,
+                json={
+                    "model": self.model,
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": self._build_system_prompt(
+                                target_language
+                            ),
+                        },
+                        {
+                            "role": "user",
+                            "content": user_prompt,
+                        },
+                    ],
+                    "stream": False,
+                    "think": False,
+                    "format": self.schema,
+                    "options": {
+                        "temperature": 0,
+                        "seed": 42,
+                        "num_predict": 50,
+                        "num_ctx": 1024,
                     },
-                    {
-                        "role": "user",
-                        "content": user_prompt,
-                    },
-                ],
-                "stream": False,
-                "think": False,
-                "format": self.schema,
-                "options": {
-                    "temperature": 0,
-                    "seed": 42,
-                    "num_predict": 50,
-                    "num_ctx": 1024,
+                    "keep_alive": "10m",
                 },
-                "keep_alive": "10m",
-            },
-            timeout=30,
-        )
+                timeout=30,
+            )
 
-        response.raise_for_status()
+            response.raise_for_status()
 
-        data = response.json()
+        except requests.RequestException as exc:
+            raise LogicBridgeError(
+                "LST-AI-001: Could not communicate with the "
+                f"Logic model at {self.ollama_url}. "
+                f"{type(exc).__name__}: {exc}"
+            ) from exc
 
         try:
-            result = json.loads(
-                data["message"]["content"]
-            )
-        except Exception as exc:
+            data = response.json()
+        except ValueError as exc:
             raise LogicBridgeError(
-                f"Invalid Logic model response: {exc}"
+                "LST-AI-001: Logic model returned invalid JSON."
+            ) from exc
+
+        try:
+            content = data["message"]["content"]
+            result = json.loads(content)
+
+        except (
+            KeyError,
+            TypeError,
+            json.JSONDecodeError,
+        ) as exc:
+            raise LogicBridgeError(
+                "LST-AI-001: Logic model returned an invalid "
+                f"structured response: {data!r}"
             ) from exc
 
         source_span = result.get(
@@ -154,12 +172,12 @@ SENTENCE_TRANSLATION:
 
         if not source_span:
             raise LogicBridgeError(
-                "Logic model returned empty source_span"
+                "LST-AI-001: Logic model returned empty source_span"
             )
 
         if not translation:
             raise LogicBridgeError(
-                "Logic model returned empty translation"
+                "LST-AI-001: Logic model returned empty translation"
             )
 
         normalized_source = " ".join(source.split())
@@ -168,7 +186,7 @@ SENTENCE_TRANSLATION:
 
         if normalized_word.casefold() not in normalized_source.casefold():
             raise LogicBridgeError(
-                f"TARGET_WORD is not present in SOURCE: "
+                f"LST-AI-001: TARGET_WORD is not present in SOURCE: "
                 f"{target_word!r}"
             )
 
@@ -182,23 +200,3 @@ SENTENCE_TRANSLATION:
             "source_span": normalized_span,
             "translation": translation,
         }
-
-
-if __name__ == "__main__":
-    bridge = LogicBridge()
-
-    result = bridge.resolve(
-        source="He turned down the offer immediately.",
-        target_word="down",
-        sentence_translation="ÐžÐ½ ÑÑ€Ð°Ð·Ñƒ Ð¾Ñ‚ÐºÐ»Ð¾Ð½Ð¸Ð» Ð¿Ñ€ÐµÐ´Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ.",
-    )
-
-    print(
-        "SOURCE SPAN:",
-        repr(result["source_span"]),
-    )
-
-    print(
-        "TRANSLATION:",
-        repr(result["translation"]),
-    )

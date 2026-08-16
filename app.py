@@ -11,6 +11,7 @@ from PySide6.QtWidgets import QMenu, QStyle, QSystemTrayIcon
 import time
 from concurrent.futures import ThreadPoolExecutor
 from settings_dialog import SettingsDialog
+from system_check_dialog import SystemCheckDialog
 from user_settings import USER_SETTINGS
 from ui_i18n import t
 from PySide6.QtCore import QObject, Signal, Slot, QTimer
@@ -745,6 +746,20 @@ def main() -> int:
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
+
+    # On the first launch, verify compatibility before loading
+    # OCR, DXcam, alignment and the persistent Ollama server.
+    if not USER_SETTINGS.first_run_completed:
+        system_check_dialog = SystemCheckDialog(
+            auto_start=True,
+        )
+        system_check_dialog.exec()
+
+        if (
+            not system_check_dialog.check_completed
+            or system_check_dialog.has_fail
+        ):
+            return 1
 
     hud = TranslationHUD()
 

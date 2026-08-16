@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import threading
 
@@ -24,6 +24,7 @@ from autostart import (
 from languages import SUPPORTED_LANGUAGES
 from speech import get_installed_english_voices
 from ui_i18n import UI_LANGUAGES, t
+from system_check_dialog import SystemCheckDialog
 from voice_packs import (
     ENGLISH_VOICE_PACKS,
     install_voice_pack,
@@ -217,6 +218,18 @@ class SettingsDialog(QDialog):
         root_layout.addLayout(
             form_layout
         )
+
+        self.system_check_button = QPushButton(
+            t("system_check")
+        )
+        self.system_check_button.clicked.connect(
+            self._open_system_check
+        )
+
+        root_layout.addWidget(
+            self.system_check_button
+        )
+
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save
             | QDialogButtonBox.StandardButton.Cancel
@@ -251,6 +264,13 @@ class SettingsDialog(QDialog):
         root_layout.addWidget(
             self.buttons
         )
+    def _open_system_check(self) -> None:
+        dialog = SystemCheckDialog(
+            self,
+            auto_start=True,
+        )
+        dialog.exec()
+
     def _refresh_voice_combo(self) -> None:
         if not hasattr(
             self,

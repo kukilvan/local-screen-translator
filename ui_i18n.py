@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import ctypes
 import os
@@ -64,6 +64,7 @@ TRANSLATIONS = {
         "save": "Save",
         "cancel": "Cancel",
         "system_language": "System language",
+        "system_check": "System Check...",
     },
 
     "ru": {

@@ -6,10 +6,12 @@ import os
 import sys
 import subprocess
 import socket
+import requests
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QMenu, QStyle, QSystemTrayIcon
 import time
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urlparse
 from settings_dialog import SettingsDialog
 from system_check_dialog import SystemCheckDialog
 from user_settings import USER_SETTINGS
@@ -615,32 +617,130 @@ def _bundled_ollama_env() -> dict[str, str]:
     return env
 
 
-def ensure_ollama_running() -> subprocess.Popen | None:
-    host = "127.0.0.1"
-    port = 11435
+REQUIRED_OLLAMA_MODELS = {
+    "qwen3:4b",
+    "riva-translate:latest",
+}
 
-    def server_is_ready() -> bool:
+
+def _probe_ollama_server() -> tuple[str, str]:
+    base_url = SETTINGS.ollama_url.rstrip("/")
+
+    try:
+        version_response = requests.get(
+            base_url + "/api/version",
+            timeout=1.0,
+        )
+
+        if not version_response.ok:
+            return (
+                "invalid",
+                f"/api/version returned HTTP {version_response.status_code}",
+            )
+
+        version_data = version_response.json()
+
+        if not (
+            isinstance(version_data, dict)
+            and version_data.get("version")
+        ):
+            return (
+                "invalid",
+                "service did not return a valid Ollama version",
+            )
+
+        tags_response = requests.get(
+            base_url + "/api/tags",
+            timeout=2.0,
+        )
+
+        if not tags_response.ok:
+            return (
+                "invalid",
+                f"/api/tags returned HTTP {tags_response.status_code}",
+            )
+
+        tags_data = tags_response.json()
+
+        models = {
+            item.get("name", "")
+            for item in tags_data.get("models", [])
+            if isinstance(item, dict)
+        }
+
+        missing = REQUIRED_OLLAMA_MODELS - models
+
+        if missing:
+            return (
+                "missing_models",
+                "missing required models: "
+                + ", ".join(sorted(missing)),
+            )
+
+        return (
+            "ready",
+            f"Ollama {version_data['version']} with required models",
+        )
+
+    except requests.RequestException as exc:
+        return (
+            "unreachable",
+            f"Ollama HTTP probe failed: {exc}",
+        )
+
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (
+            "invalid",
+            f"invalid Ollama API response: {exc}",
+        )
+
+
+def ensure_ollama_running() -> subprocess.Popen | None:
+    parsed = urlparse(SETTINGS.ollama_url)
+
+    host = parsed.hostname or "127.0.0.1"
+    port = parsed.port or 11435
+
+    def port_is_open() -> bool:
         try:
             with socket.create_connection(
                 (host, port),
-                timeout=0.2,
+                timeout=0.3,
             ):
                 return True
-
         except OSError:
             return False
 
-    if server_is_ready():
-        return None
+    # Something already owns the port.
+    if port_is_open():
+        status, detail = _probe_ollama_server()
+
+        if status == "ready":
+            return None
+
+        if status == "missing_models":
+            raise RuntimeError(
+                "LST-AI-001: Existing Ollama server on "
+                f"{host}:{port} is missing required models. "
+                f"{detail}"
+            )
+
+        raise RuntimeError(
+            "LST-NET-001: Local port "
+            f"{host}:{port} is occupied by an incompatible "
+            f"or unknown service. {detail}"
+        )
 
     if not OLLAMA_EXE.is_file():
         raise RuntimeError(
-            f"Bundled Ollama executable not found: {OLLAMA_EXE}"
+            "LST-FILE-001: Bundled Ollama executable not found: "
+            f"{OLLAMA_EXE}"
         )
 
     if not OLLAMA_MODELS_DIR.is_dir():
         raise RuntimeError(
-            f"Bundled Ollama models not found: {OLLAMA_MODELS_DIR}"
+            "LST-FILE-001: Bundled Ollama models not found: "
+            f"{OLLAMA_MODELS_DIR}"
         )
 
     process = subprocess.Popen(
@@ -655,18 +755,21 @@ def ensure_ollama_running() -> subprocess.Popen | None:
         env=_bundled_ollama_env(),
     )
 
-    deadline = time.perf_counter() + 10.0
+    deadline = time.perf_counter() + 15.0
 
     while time.perf_counter() < deadline:
-        if server_is_ready():
-            return process
-
         if process.poll() is not None:
             raise RuntimeError(
-                f"Bundled Ollama exited with code {process.returncode}"
+                "LST-AI-001: Bundled Ollama exited with code "
+                f"{process.returncode}"
             )
 
-        time.sleep(0.1)
+        status, _detail = _probe_ollama_server()
+
+        if status == "ready":
+            return process
+
+        time.sleep(0.2)
 
     try:
         subprocess.run(
@@ -687,8 +790,10 @@ def ensure_ollama_running() -> subprocess.Popen | None:
         pass
 
     raise RuntimeError(
-        "Bundled Ollama server did not start within 10 seconds"
+        "LST-AI-001: Bundled Ollama server did not become "
+        "ready with the required models within 15 seconds"
     )
+
 
 def acquire_single_instance_mutex():
     kernel32 = ctypes.WinDLL(

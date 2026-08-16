@@ -1754,6 +1754,884 @@ HELP_TRANSLATIONS_EXTRA["bg"] = {
 }
 
 
+
+# SELF HELP LANGUAGE BATCH 4A1
+
+HELP_TRANSLATIONS_EXTRA["hr"] = {
+    "LST-SYS-001": ("Nepodržana konfiguracija sustava Windows", [
+        "Koristite 64-bitnu verziju sustava Windows 10 ili Windows 11.",
+        "Instalirajte sva dostupna ažuriranja za Windows.",
+        "Ponovno pokrenite Windows i zatim ponovno pokrenite provjeru sustava.",
+    ]),
+    "LST-GPU-001": ("NVIDIA GPU ili upravljački program nisu pronađeni", [
+        "U Upravitelju uređaja provjerite prikazuje li se NVIDIA GPU bez pogrešaka.",
+        "Instalirajte ili ponovno instalirajte službeni NVIDIA upravljački program.",
+        "Ponovno pokrenite Windows i ponovite provjeru.",
+    ]),
+    "LST-GPU-002": ("NVIDIA upravljački program je prestar", [
+        "Instalirajte najnoviji NVIDIA upravljački program za svoju grafičku karticu.",
+        "Nakon instalacije ponovno pokrenite Windows.",
+        "Ponovno pokrenite provjeru sustava.",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU nije kompatibilan", [
+        "Ovaj GPU ne podržava potrebno CUDA/Paddle okruženje.",
+        "Koristite noviji kompatibilni NVIDIA GPU.",
+        "Nemojte ručno instalirati CUDA Toolkit; aplikacija sadrži potrebno okruženje.",
+    ]),
+    "LST-GPU-004": ("Nema dovoljno grafičke memorije", [
+        "Zatvorite igre, preglednike i druge programe koji intenzivno koriste GPU.",
+        "Ponovno pokrenite provjeru i provjerite količinu slobodnog VRAM-a.",
+        "Ako prijevod i dalje ne radi, koristite GPU s više VRAM-a.",
+    ]),
+    "LST-GPU-010": ("Otkriveno je više NVIDIA GPU-ova", [
+        "Trenutačna verzija koristi NVIDIA GPU 0.",
+        "U tehničkim detaljima provjerite koja je kartica navedena kao gpu:0.",
+        "Ako se koristi pogrešan GPU, promijenite GPU konfiguraciju u sustavu Windows/NVIDIA.",
+    ]),
+    "LST-CAP-001": ("Zaslon nije moguće pravilno snimiti", [
+        "Provjerite je li željeni monitor spojen na NVIDIA GPU.",
+        "Pokušajte koristiti način Borderless Windowed / prozor bez obruba.",
+        "Ponovno pokrenite Local Screen Translator i zatim ponovite provjeru.",
+    ]),
+    "LST-NET-001": ("Lokalni port 11435 već se koristi", [
+        "Zatvorite druge lokalne AI programe i instance programa Ollama.",
+        "Ponovno pokrenite Local Screen Translator.",
+        "Ako problem ostane, ponovno pokrenite Windows i prvo otvorite Local Screen Translator.",
+    ]),
+    "LST-TTS-001": ("Nije pronađen odgovarajući Microsoftov engleski glas", [
+        "Otvorite postavke programa Local Screen Translator.",
+        "Odaberite i instalirajte Microsoftov paket engleskog glasa.",
+        "Ako je potrebno, ponovno pokrenite Windows.",
+    ]),
+    "LST-CUDA-001": ("GPU OCR nije moguće pokrenuti", [
+        "Ažurirajte ili ponovno instalirajte NVIDIA upravljački program.",
+        "Ponovno pokrenite Windows i zatvorite programe koji intenzivno koriste GPU.",
+        "Nemojte ručno instalirati Python, PaddlePaddle ili CUDA Toolkit.",
+    ]),
+    "LST-FILE-001": ("Nedostaje potrebna datoteka aplikacije", [
+        "Nemojte ručno preuzimati pojedinačne modele ili DLL datoteke.",
+        "Provjerite povijest zaštite u Windows Security.",
+        "Ponovno instalirajte cijelu aplikaciju tako da Setup.exe i sve .bin datoteke budu u istoj mapi.",
+    ]),
+    "LST-ALIGN-001": ("Komponentu za poravnanje teksta nije moguće pokrenuti", [
+        "Provjerite je li Windows Security blokirao LSTAlignWorker.exe.",
+        "Ako je datoteka uklonjena, ponovno instalirajte cijelu aplikaciju.",
+        "Ponovno pokrenite Windows i zatim ponovite provjeru.",
+    ]),
+    "LST-DATA-001": ("Aplikacija ne može spremiti postavke", [
+        "Provjerite ima li vaš Windows račun pravo pisanja u mapu AppData.",
+        "Provjerite Controlled Folder Access i drugi sigurnosni softver.",
+        "Ponovno pokrenite provjeru sustava.",
+    ]),
+    "LST-AI-001": ("Lokalne modele za prijevod nije moguće pokrenuti", [
+        "Ažurirajte NVIDIA upravljački program i ponovno pokrenite Windows.",
+        "Zatvorite druge AI programe i aplikacije koje intenzivno koriste GPU.",
+        "Ako modeli nedostaju, ponovno instalirajte cijelu aplikaciju.",
+    ]),
+    "LST-GEN-001": ("Provjera sustava pronašla je problem", [
+        "Ponovno pokrenite Windows i zatim ponovite provjeru.",
+        "Na Internetu potražite točan tekst pogreške iz tehničkih detalja.",
+        "Ako datoteke nedostaju, ponovno instalirajte cijelu aplikaciju.",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["tr"] = {
+    "LST-SYS-001": ("Desteklenmeyen Windows yapılandırması", [
+        "Windows 10 veya Windows 11'in 64 bit sürümünü kullanın.",
+        "Mevcut tüm Windows güncellemelerini yükleyin.",
+        "Windows'u yeniden başlatın ve Sistem Kontrolünü tekrar çalıştırın.",
+    ]),
+    "LST-GPU-001": ("NVIDIA GPU veya sürücü algılanamadı", [
+        "Aygıt Yöneticisi'nde NVIDIA GPU'nun hatasız göründüğünü kontrol edin.",
+        "Resmî NVIDIA sürücüsünü yükleyin veya yeniden yükleyin.",
+        "Windows'u yeniden başlatın ve kontrolü tekrar çalıştırın.",
+    ]),
+    "LST-GPU-002": ("NVIDIA sürücüsü çok eski", [
+        "Ekran kartınız için en güncel NVIDIA sürücüsünü yükleyin.",
+        "Kurulumdan sonra Windows'u yeniden başlatın.",
+        "Sistem Kontrolünü tekrar çalıştırın.",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU uyumlu değil", [
+        "Bu GPU gerekli CUDA/Paddle ortamını desteklemiyor.",
+        "Daha yeni ve uyumlu bir NVIDIA GPU kullanın.",
+        "CUDA Toolkit'i manuel olarak yüklemeyin; uygulama gerekli çalışma ortamını içerir.",
+    ]),
+    "LST-GPU-004": ("Yetersiz ekran kartı belleği", [
+        "Oyunları, tarayıcıları ve GPU'yu yoğun kullanan diğer programları kapatın.",
+        "Kontrolü tekrar çalıştırın ve boş VRAM miktarını kontrol edin.",
+        "Çeviri hâlâ çalışmıyorsa daha fazla VRAM'e sahip bir GPU kullanın.",
+    ]),
+    "LST-GPU-010": ("Birden fazla NVIDIA GPU algılandı", [
+        "Geçerli sürüm NVIDIA GPU 0'ı kullanır.",
+        "Teknik ayrıntılarda hangi kartın gpu:0 olarak gösterildiğini kontrol edin.",
+        "Yanlış GPU kullanılıyorsa Windows/NVIDIA GPU yapılandırmasını değiştirin.",
+    ]),
+    "LST-CAP-001": ("Ekran düzgün şekilde yakalanamadı", [
+        "İstenen monitörün NVIDIA GPU'ya bağlı olduğundan emin olun.",
+        "Borderless Windowed / kenarlıksız pencere modunu deneyin.",
+        "Local Screen Translator'ı yeniden başlatın ve kontrolü tekrar çalıştırın.",
+    ]),
+    "LST-NET-001": ("Yerel 11435 bağlantı noktası zaten kullanımda", [
+        "Diğer yerel AI uygulamalarını ve Ollama örneklerini kapatın.",
+        "Local Screen Translator'ı yeniden başlatın.",
+        "Sorun devam ederse Windows'u yeniden başlatın ve önce Local Screen Translator'ı açın.",
+    ]),
+    "LST-TTS-001": ("Kullanılabilir Microsoft İngilizce sesi bulunamadı", [
+        "Local Screen Translator ayarlarını açın.",
+        "Bir Microsoft İngilizce ses paketini seçip yükleyin.",
+        "Gerekirse Windows'u yeniden başlatın.",
+    ]),
+    "LST-CUDA-001": ("GPU OCR başlatılamadı", [
+        "NVIDIA sürücüsünü güncelleyin veya yeniden yükleyin.",
+        "Windows'u yeniden başlatın ve GPU'yu yoğun kullanan programları kapatın.",
+        "Python, PaddlePaddle veya CUDA Toolkit'i manuel olarak yüklemeyin.",
+    ]),
+    "LST-FILE-001": ("Gerekli bir uygulama dosyası eksik", [
+        "Tek tek model veya DLL dosyalarını manuel olarak indirmeyin.",
+        "Windows Security koruma geçmişini kontrol edin.",
+        "Setup.exe ve tüm .bin dosyaları aynı klasörde olacak şekilde uygulamayı tamamen yeniden yükleyin.",
+    ]),
+    "LST-ALIGN-001": ("Metin hizalama bileşeni başlatılamadı", [
+        "Windows Security'nin LSTAlignWorker.exe dosyasını engelleyip engellemediğini kontrol edin.",
+        "Dosya kaldırıldıysa uygulamayı tamamen yeniden yükleyin.",
+        "Windows'u yeniden başlatın ve kontrolü tekrar çalıştırın.",
+    ]),
+    "LST-DATA-001": ("Uygulama ayarları kaydedemiyor", [
+        "Windows hesabınızın AppData klasörüne yazabildiğini kontrol edin.",
+        "Controlled Folder Access ve diğer güvenlik yazılımlarını kontrol edin.",
+        "Sistem Kontrolünü tekrar çalıştırın.",
+    ]),
+    "LST-AI-001": ("Yerel çeviri modelleri başlatılamadı", [
+        "NVIDIA sürücüsünü güncelleyin ve Windows'u yeniden başlatın.",
+        "Diğer AI uygulamalarını ve GPU'yu yoğun kullanan programları kapatın.",
+        "Modeller eksikse uygulamayı tamamen yeniden yükleyin.",
+    ]),
+    "LST-GEN-001": ("Sistem Kontrolü bir sorun buldu", [
+        "Windows'u yeniden başlatın ve kontrolü tekrar çalıştırın.",
+        "Teknik ayrıntılardaki tam hata metnini İnternette arayın.",
+        "Dosyalar eksikse uygulamayı tamamen yeniden yükleyin.",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["ar"] = {
+    "LST-SYS-001": ("إعداد Windows غير مدعوم", [
+        "استخدم إصدار 64 بت من Windows 10 أو Windows 11.",
+        "ثبّت جميع تحديثات Windows المتاحة.",
+        "أعد تشغيل Windows ثم شغّل فحص النظام مرة أخرى.",
+    ]),
+    "LST-GPU-001": ("لم يتم اكتشاف بطاقة NVIDIA أو برنامج التشغيل", [
+        "تحقق في إدارة الأجهزة من ظهور بطاقة NVIDIA دون أخطاء.",
+        "ثبّت أو أعد تثبيت برنامج تشغيل NVIDIA الرسمي.",
+        "أعد تشغيل Windows ثم شغّل الفحص مرة أخرى.",
+    ]),
+    "LST-GPU-002": ("برنامج تشغيل NVIDIA قديم جدًا", [
+        "ثبّت أحدث برنامج تشغيل NVIDIA المتاح لبطاقة الرسومات.",
+        "أعد تشغيل Windows بعد التثبيت.",
+        "شغّل فحص النظام مرة أخرى.",
+    ]),
+    "LST-GPU-003": ("بطاقة NVIDIA غير متوافقة", [
+        "هذه البطاقة لا تدعم بيئة CUDA/Paddle المطلوبة.",
+        "استخدم بطاقة NVIDIA أحدث ومتوافقة.",
+        "لا تثبّت CUDA Toolkit يدويًا؛ التطبيق يتضمن بيئة التشغيل المطلوبة.",
+    ]),
+    "LST-GPU-004": ("ذاكرة الفيديو غير كافية", [
+        "أغلق الألعاب والمتصفحات والبرامج الأخرى التي تستخدم GPU بكثافة.",
+        "شغّل الفحص مرة أخرى وتحقق من مقدار VRAM المتاح.",
+        "إذا استمرت مشكلة الترجمة، استخدم بطاقة GPU بذاكرة VRAM أكبر.",
+    ]),
+    "LST-GPU-010": ("تم اكتشاف أكثر من بطاقة NVIDIA", [
+        "يستخدم الإصدار الحالي NVIDIA GPU 0.",
+        "تحقق من التفاصيل التقنية لمعرفة البطاقة الظاهرة باسم gpu:0.",
+        "إذا تم استخدام البطاقة الخطأ، غيّر إعدادات GPU في Windows/NVIDIA.",
+    ]),
+    "LST-CAP-001": ("تعذر التقاط الشاشة بشكل صحيح", [
+        "تأكد من توصيل الشاشة المطلوبة ببطاقة NVIDIA.",
+        "جرّب وضع Borderless Windowed / النافذة بلا حدود.",
+        "أعد تشغيل Local Screen Translator ثم شغّل الفحص مرة أخرى.",
+    ]),
+    "LST-NET-001": ("المنفذ المحلي 11435 مستخدم بالفعل", [
+        "أغلق تطبيقات الذكاء الاصطناعي المحلية الأخرى ونسخ Ollama قيد التشغيل.",
+        "أعد تشغيل Local Screen Translator.",
+        "إذا استمرت المشكلة، أعد تشغيل Windows وافتح Local Screen Translator أولًا.",
+    ]),
+    "LST-TTS-001": ("لم يتم العثور على صوت Microsoft إنجليزي مناسب", [
+        "افتح إعدادات Local Screen Translator.",
+        "اختر وثبّت حزمة صوت Microsoft باللغة الإنجليزية.",
+        "أعد تشغيل Windows إذا لزم الأمر.",
+    ]),
+    "LST-CUDA-001": ("تعذر تشغيل OCR باستخدام GPU", [
+        "حدّث أو أعد تثبيت برنامج تشغيل NVIDIA.",
+        "أعد تشغيل Windows وأغلق البرامج التي تستخدم GPU بكثافة.",
+        "لا تثبّت Python أو PaddlePaddle أو CUDA Toolkit يدويًا.",
+    ]),
+    "LST-FILE-001": ("ملف مطلوب للتطبيق مفقود", [
+        "لا تنزّل نماذج منفردة أو ملفات DLL يدويًا.",
+        "تحقق من سجل الحماية في Windows Security.",
+        "أعد تثبيت التطبيق بالكامل مع وضع Setup.exe وجميع ملفات .bin في المجلد نفسه.",
+    ]),
+    "LST-ALIGN-001": ("تعذر تشغيل مكوّن محاذاة النص", [
+        "تحقق مما إذا كان Windows Security قد حظر LSTAlignWorker.exe.",
+        "إذا تمت إزالة الملف، فأعد تثبيت التطبيق بالكامل.",
+        "أعد تشغيل Windows ثم شغّل الفحص مرة أخرى.",
+    ]),
+    "LST-DATA-001": ("لا يستطيع التطبيق حفظ الإعدادات", [
+        "تأكد من أن حساب Windows لديه صلاحية الكتابة إلى مجلد AppData.",
+        "تحقق من Controlled Folder Access وبرامج الحماية الأخرى.",
+        "شغّل فحص النظام مرة أخرى.",
+    ]),
+    "LST-AI-001": ("تعذر تشغيل نماذج الترجمة المحلية", [
+        "حدّث برنامج تشغيل NVIDIA ثم أعد تشغيل Windows.",
+        "أغلق تطبيقات الذكاء الاصطناعي الأخرى والبرامج التي تستخدم GPU بكثافة.",
+        "إذا كانت النماذج مفقودة، فأعد تثبيت التطبيق بالكامل.",
+    ]),
+    "LST-GEN-001": ("اكتشف فحص النظام مشكلة", [
+        "أعد تشغيل Windows ثم شغّل الفحص مرة أخرى.",
+        "ابحث على الإنترنت عن نص الخطأ الدقيق الموجود في التفاصيل التقنية.",
+        "إذا كانت الملفات مفقودة، فأعد تثبيت التطبيق بالكامل.",
+    ]),
+}
+
+
+
+# SELF HELP LANGUAGE BATCH 4A2
+
+HELP_TRANSLATIONS_EXTRA["hi"] = {
+    "LST-SYS-001": ("Windows कॉन्फ़िगरेशन समर्थित नहीं है", [
+        "Windows 10 या Windows 11 का 64-बिट संस्करण उपयोग करें।",
+        "सभी उपलब्ध Windows अपडेट इंस्टॉल करें।",
+        "Windows को पुनः प्रारंभ करें और सिस्टम जाँच फिर से चलाएँ।",
+    ]),
+    "LST-GPU-001": ("NVIDIA GPU या ड्राइवर नहीं मिला", [
+        "Device Manager में जाँचें कि NVIDIA GPU बिना त्रुटि के दिखाई दे रहा है।",
+        "आधिकारिक NVIDIA ड्राइवर इंस्टॉल या पुनः इंस्टॉल करें।",
+        "Windows को पुनः प्रारंभ करें और जाँच फिर से चलाएँ।",
+    ]),
+    "LST-GPU-002": ("NVIDIA ड्राइवर बहुत पुराना है", [
+        "अपने ग्राफ़िक्स कार्ड के लिए नवीनतम NVIDIA ड्राइवर इंस्टॉल करें।",
+        "इंस्टॉलेशन के बाद Windows को पुनः प्रारंभ करें।",
+        "सिस्टम जाँच फिर से चलाएँ।",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU संगत नहीं है", [
+        "यह GPU आवश्यक CUDA/Paddle वातावरण का समर्थन नहीं करता।",
+        "नया और संगत NVIDIA GPU उपयोग करें।",
+        "CUDA Toolkit को मैन्युअल रूप से इंस्टॉल न करें; आवश्यक runtime ऐप में शामिल है।",
+    ]),
+    "LST-GPU-004": ("वीडियो मेमोरी पर्याप्त नहीं है", [
+        "गेम, ब्राउज़र और GPU का अधिक उपयोग करने वाले अन्य प्रोग्राम बंद करें।",
+        "जाँच फिर से चलाएँ और उपलब्ध VRAM देखें।",
+        "यदि अनुवाद अभी भी काम नहीं करता, तो अधिक VRAM वाला GPU उपयोग करें।",
+    ]),
+    "LST-GPU-010": ("एक से अधिक NVIDIA GPU मिले", [
+        "वर्तमान संस्करण NVIDIA GPU 0 का उपयोग करता है।",
+        "तकनीकी विवरण में देखें कि कौन-सा कार्ड gpu:0 के रूप में दिखाया गया है।",
+        "यदि गलत GPU उपयोग हो रहा है, तो Windows/NVIDIA में GPU कॉन्फ़िगरेशन बदलें।",
+    ]),
+    "LST-CAP-001": ("स्क्रीन को सही तरह कैप्चर नहीं किया जा सका", [
+        "सुनिश्चित करें कि आवश्यक मॉनिटर NVIDIA GPU से जुड़ा है।",
+        "Borderless Windowed / बिना बॉर्डर वाला विंडो मोड आज़माएँ।",
+        "Local Screen Translator को पुनः प्रारंभ करें और जाँच फिर से चलाएँ।",
+    ]),
+    "LST-NET-001": ("स्थानीय पोर्ट 11435 पहले से उपयोग में है", [
+        "अन्य स्थानीय AI ऐप और चल रहे Ollama इंस्टेंस बंद करें।",
+        "Local Screen Translator को पुनः प्रारंभ करें।",
+        "यदि समस्या बनी रहे, Windows को पुनः प्रारंभ करें और सबसे पहले Local Screen Translator खोलें।",
+    ]),
+    "LST-TTS-001": ("उपयुक्त Microsoft अंग्रेज़ी आवाज़ नहीं मिली", [
+        "Local Screen Translator की सेटिंग्स खोलें।",
+        "Microsoft का अंग्रेज़ी voice pack चुनें और इंस्टॉल करें।",
+        "यदि आवश्यक हो तो Windows को पुनः प्रारंभ करें।",
+    ]),
+    "LST-CUDA-001": ("GPU OCR प्रारंभ नहीं हो सका", [
+        "NVIDIA ड्राइवर अपडेट या पुनः इंस्टॉल करें।",
+        "Windows को पुनः प्रारंभ करें और GPU का अधिक उपयोग करने वाले प्रोग्राम बंद करें।",
+        "Python, PaddlePaddle या CUDA Toolkit मैन्युअल रूप से इंस्टॉल न करें।",
+    ]),
+    "LST-FILE-001": ("आवश्यक ऐप फ़ाइल गायब है", [
+        "अलग-अलग मॉडल या DLL फ़ाइलें मैन्युअल रूप से डाउनलोड न करें।",
+        "Windows Security की protection history जाँचें।",
+        "Setup.exe और सभी .bin फ़ाइलों को एक ही फ़ोल्डर में रखकर पूरा ऐप पुनः इंस्टॉल करें।",
+    ]),
+    "LST-ALIGN-001": ("टेक्स्ट अलाइनमेंट घटक प्रारंभ नहीं हो सका", [
+        "जाँचें कि Windows Security ने LSTAlignWorker.exe को ब्लॉक तो नहीं किया।",
+        "यदि फ़ाइल हटाई गई है, तो ऐप को पूरी तरह पुनः इंस्टॉल करें।",
+        "Windows को पुनः प्रारंभ करें और जाँच फिर से चलाएँ।",
+    ]),
+    "LST-DATA-001": ("ऐप सेटिंग्स सहेज नहीं सकता", [
+        "जाँचें कि आपके Windows खाते को AppData फ़ोल्डर में लिखने की अनुमति है।",
+        "Controlled Folder Access और अन्य सुरक्षा सॉफ़्टवेयर जाँचें।",
+        "सिस्टम जाँच फिर से चलाएँ।",
+    ]),
+    "LST-AI-001": ("स्थानीय अनुवाद मॉडल प्रारंभ नहीं हो सके", [
+        "NVIDIA ड्राइवर अपडेट करें और Windows को पुनः प्रारंभ करें।",
+        "अन्य AI ऐप और GPU का अधिक उपयोग करने वाले प्रोग्राम बंद करें।",
+        "यदि मॉडल गायब हैं, तो ऐप को पूरी तरह पुनः इंस्टॉल करें।",
+    ]),
+    "LST-GEN-001": ("सिस्टम जाँच में समस्या मिली", [
+        "Windows को पुनः प्रारंभ करें और जाँच फिर से चलाएँ।",
+        "तकनीकी विवरण में दिए गए सटीक त्रुटि संदेश को इंटरनेट पर खोजें।",
+        "यदि फ़ाइलें गायब हैं, तो ऐप को पूरी तरह पुनः इंस्टॉल करें।",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["vi"] = {
+    "LST-SYS-001": ("Cấu hình Windows không được hỗ trợ", [
+        "Hãy sử dụng phiên bản 64-bit của Windows 10 hoặc Windows 11.",
+        "Cài đặt tất cả bản cập nhật Windows hiện có.",
+        "Khởi động lại Windows rồi chạy lại Kiểm tra hệ thống.",
+    ]),
+    "LST-GPU-001": ("Không phát hiện GPU NVIDIA hoặc trình điều khiển", [
+        "Kiểm tra trong Device Manager để chắc chắn GPU NVIDIA xuất hiện mà không có lỗi.",
+        "Cài đặt hoặc cài đặt lại trình điều khiển NVIDIA chính thức.",
+        "Khởi động lại Windows rồi chạy lại kiểm tra.",
+    ]),
+    "LST-GPU-002": ("Trình điều khiển NVIDIA quá cũ", [
+        "Cài đặt trình điều khiển NVIDIA mới nhất cho card đồ họa của bạn.",
+        "Khởi động lại Windows sau khi cài đặt.",
+        "Chạy lại Kiểm tra hệ thống.",
+    ]),
+    "LST-GPU-003": ("GPU NVIDIA không tương thích", [
+        "GPU này không hỗ trợ môi trường CUDA/Paddle cần thiết.",
+        "Sử dụng GPU NVIDIA mới hơn và tương thích.",
+        "Không cài CUDA Toolkit thủ công; ứng dụng đã bao gồm môi trường cần thiết.",
+    ]),
+    "LST-GPU-004": ("Không đủ bộ nhớ đồ họa", [
+        "Đóng trò chơi, trình duyệt và các chương trình sử dụng GPU nhiều.",
+        "Chạy lại kiểm tra và xem lượng VRAM còn trống.",
+        "Nếu dịch vẫn không hoạt động, hãy sử dụng GPU có nhiều VRAM hơn.",
+    ]),
+    "LST-GPU-010": ("Phát hiện nhiều GPU NVIDIA", [
+        "Phiên bản hiện tại sử dụng NVIDIA GPU 0.",
+        "Trong chi tiết kỹ thuật, kiểm tra card nào được hiển thị là gpu:0.",
+        "Nếu đang dùng sai GPU, hãy thay đổi cấu hình GPU trong Windows/NVIDIA.",
+    ]),
+    "LST-CAP-001": ("Không thể chụp màn hình đúng cách", [
+        "Đảm bảo màn hình cần sử dụng được kết nối với GPU NVIDIA.",
+        "Thử chế độ Borderless Windowed / cửa sổ không viền.",
+        "Khởi động lại Local Screen Translator rồi chạy lại kiểm tra.",
+    ]),
+    "LST-NET-001": ("Cổng cục bộ 11435 đang được sử dụng", [
+        "Đóng các ứng dụng AI cục bộ khác và các phiên Ollama đang chạy.",
+        "Khởi động lại Local Screen Translator.",
+        "Nếu lỗi vẫn còn, khởi động lại Windows và mở Local Screen Translator trước tiên.",
+    ]),
+    "LST-TTS-001": ("Không tìm thấy giọng Microsoft tiếng Anh phù hợp", [
+        "Mở cài đặt Local Screen Translator.",
+        "Chọn và cài đặt gói giọng nói Microsoft tiếng Anh.",
+        "Khởi động lại Windows nếu cần.",
+    ]),
+    "LST-CUDA-001": ("Không thể khởi động GPU OCR", [
+        "Cập nhật hoặc cài đặt lại trình điều khiển NVIDIA.",
+        "Khởi động lại Windows và đóng các chương trình sử dụng GPU nhiều.",
+        "Không cài đặt Python, PaddlePaddle hoặc CUDA Toolkit thủ công.",
+    ]),
+    "LST-FILE-001": ("Thiếu tệp ứng dụng bắt buộc", [
+        "Không tải riêng từng mô hình hoặc tệp DLL theo cách thủ công.",
+        "Kiểm tra lịch sử bảo vệ trong Windows Security.",
+        "Cài đặt lại toàn bộ ứng dụng với Setup.exe và tất cả tệp .bin trong cùng một thư mục.",
+    ]),
+    "LST-ALIGN-001": ("Không thể khởi động thành phần căn chỉnh văn bản", [
+        "Kiểm tra xem Windows Security có chặn LSTAlignWorker.exe hay không.",
+        "Nếu tệp đã bị xóa, hãy cài đặt lại toàn bộ ứng dụng.",
+        "Khởi động lại Windows rồi chạy lại kiểm tra.",
+    ]),
+    "LST-DATA-001": ("Ứng dụng không thể lưu cài đặt", [
+        "Kiểm tra tài khoản Windows của bạn có quyền ghi vào thư mục AppData.",
+        "Kiểm tra Controlled Folder Access và các phần mềm bảo mật khác.",
+        "Chạy lại Kiểm tra hệ thống.",
+    ]),
+    "LST-AI-001": ("Không thể khởi động các mô hình dịch cục bộ", [
+        "Cập nhật trình điều khiển NVIDIA rồi khởi động lại Windows.",
+        "Đóng các ứng dụng AI khác và chương trình sử dụng GPU nhiều.",
+        "Nếu thiếu mô hình, hãy cài đặt lại toàn bộ ứng dụng.",
+    ]),
+    "LST-GEN-001": ("Kiểm tra hệ thống đã phát hiện sự cố", [
+        "Khởi động lại Windows rồi chạy lại kiểm tra.",
+        "Tìm trên Internet chính xác nội dung lỗi trong phần chi tiết kỹ thuật.",
+        "Nếu thiếu tệp, hãy cài đặt lại toàn bộ ứng dụng.",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["id"] = {
+    "LST-SYS-001": ("Konfigurasi Windows tidak didukung", [
+        "Gunakan Windows 10 atau Windows 11 versi 64-bit.",
+        "Instal semua pembaruan Windows yang tersedia.",
+        "Mulai ulang Windows lalu jalankan Pemeriksaan Sistem lagi.",
+    ]),
+    "LST-GPU-001": ("GPU NVIDIA atau driver tidak terdeteksi", [
+        "Periksa di Device Manager bahwa GPU NVIDIA tampil tanpa kesalahan.",
+        "Instal atau instal ulang driver resmi NVIDIA.",
+        "Mulai ulang Windows lalu jalankan pemeriksaan lagi.",
+    ]),
+    "LST-GPU-002": ("Driver NVIDIA terlalu lama", [
+        "Instal driver NVIDIA terbaru untuk kartu grafis Anda.",
+        "Mulai ulang Windows setelah instalasi.",
+        "Jalankan Pemeriksaan Sistem lagi.",
+    ]),
+    "LST-GPU-003": ("GPU NVIDIA tidak kompatibel", [
+        "GPU ini tidak mendukung lingkungan CUDA/Paddle yang diperlukan.",
+        "Gunakan GPU NVIDIA yang lebih baru dan kompatibel.",
+        "Jangan instal CUDA Toolkit secara manual; aplikasi sudah menyertakan runtime yang diperlukan.",
+    ]),
+    "LST-GPU-004": ("Memori grafis tidak mencukupi", [
+        "Tutup game, browser, dan program lain yang menggunakan GPU secara intensif.",
+        "Jalankan pemeriksaan lagi dan periksa VRAM yang tersedia.",
+        "Jika penerjemahan tetap tidak berfungsi, gunakan GPU dengan VRAM lebih besar.",
+    ]),
+    "LST-GPU-010": ("Beberapa GPU NVIDIA terdeteksi", [
+        "Versi saat ini menggunakan NVIDIA GPU 0.",
+        "Periksa detail teknis untuk melihat kartu mana yang ditampilkan sebagai gpu:0.",
+        "Jika GPU yang digunakan salah, ubah konfigurasi GPU di Windows/NVIDIA.",
+    ]),
+    "LST-CAP-001": ("Layar tidak dapat ditangkap dengan benar", [
+        "Pastikan monitor yang diinginkan terhubung ke GPU NVIDIA.",
+        "Coba mode Borderless Windowed / jendela tanpa bingkai.",
+        "Mulai ulang Local Screen Translator lalu jalankan pemeriksaan lagi.",
+    ]),
+    "LST-NET-001": ("Port lokal 11435 sudah digunakan", [
+        "Tutup aplikasi AI lokal lain dan instance Ollama yang sedang berjalan.",
+        "Mulai ulang Local Screen Translator.",
+        "Jika masalah tetap terjadi, mulai ulang Windows dan buka Local Screen Translator terlebih dahulu.",
+    ]),
+    "LST-TTS-001": ("Suara Microsoft bahasa Inggris yang sesuai tidak ditemukan", [
+        "Buka pengaturan Local Screen Translator.",
+        "Pilih dan instal paket suara Microsoft bahasa Inggris.",
+        "Mulai ulang Windows jika diperlukan.",
+    ]),
+    "LST-CUDA-001": ("GPU OCR tidak dapat dimulai", [
+        "Perbarui atau instal ulang driver NVIDIA.",
+        "Mulai ulang Windows dan tutup program yang menggunakan GPU secara intensif.",
+        "Jangan instal Python, PaddlePaddle, atau CUDA Toolkit secara manual.",
+    ]),
+    "LST-FILE-001": ("File aplikasi yang diperlukan tidak ditemukan", [
+        "Jangan mengunduh model individual atau file DLL secara manual.",
+        "Periksa riwayat perlindungan di Windows Security.",
+        "Instal ulang seluruh aplikasi dengan Setup.exe dan semua file .bin di folder yang sama.",
+    ]),
+    "LST-ALIGN-001": ("Komponen penyelarasan teks tidak dapat dimulai", [
+        "Periksa apakah Windows Security memblokir LSTAlignWorker.exe.",
+        "Jika file telah dihapus, instal ulang seluruh aplikasi.",
+        "Mulai ulang Windows lalu jalankan pemeriksaan lagi.",
+    ]),
+    "LST-DATA-001": ("Aplikasi tidak dapat menyimpan pengaturan", [
+        "Pastikan akun Windows Anda dapat menulis ke folder AppData.",
+        "Periksa Controlled Folder Access dan perangkat lunak keamanan lainnya.",
+        "Jalankan Pemeriksaan Sistem lagi.",
+    ]),
+    "LST-AI-001": ("Model penerjemahan lokal tidak dapat dimulai", [
+        "Perbarui driver NVIDIA lalu mulai ulang Windows.",
+        "Tutup aplikasi AI lain dan program yang menggunakan GPU secara intensif.",
+        "Jika model hilang, instal ulang seluruh aplikasi.",
+    ]),
+    "LST-GEN-001": ("Pemeriksaan Sistem menemukan masalah", [
+        "Mulai ulang Windows lalu jalankan pemeriksaan lagi.",
+        "Cari di Internet teks kesalahan persis dari detail teknis.",
+        "Jika file hilang, instal ulang seluruh aplikasi.",
+    ]),
+}
+
+
+
+# SELF HELP LANGUAGE BATCH 4B
+
+HELP_TRANSLATIONS_EXTRA["th"] = {
+    "LST-SYS-001": ("ไม่รองรับการกำหนดค่า Windows นี้", [
+        "ใช้ Windows 10 หรือ Windows 11 แบบ 64 บิต",
+        "ติดตั้งการอัปเดต Windows ที่มีทั้งหมด",
+        "รีสตาร์ต Windows แล้วเรียกใช้การตรวจสอบระบบอีกครั้ง",
+    ]),
+    "LST-GPU-001": ("ไม่พบ NVIDIA GPU หรือไดรเวอร์", [
+        "ตรวจสอบใน Device Manager ว่า NVIDIA GPU แสดงโดยไม่มีข้อผิดพลาด",
+        "ติดตั้งหรือติดตั้งไดรเวอร์ NVIDIA อย่างเป็นทางการใหม่",
+        "รีสตาร์ต Windows แล้วตรวจสอบอีกครั้ง",
+    ]),
+    "LST-GPU-002": ("ไดรเวอร์ NVIDIA เก่าเกินไป", [
+        "ติดตั้งไดรเวอร์ NVIDIA เวอร์ชันล่าสุดสำหรับการ์ดจอของคุณ",
+        "รีสตาร์ต Windows หลังการติดตั้ง",
+        "เรียกใช้การตรวจสอบระบบอีกครั้ง",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU ไม่เข้ากัน", [
+        "GPU นี้ไม่รองรับสภาพแวดล้อม CUDA/Paddle ที่จำเป็น",
+        "ใช้ NVIDIA GPU รุ่นใหม่กว่าที่รองรับ",
+        "ไม่ต้องติดตั้ง CUDA Toolkit ด้วยตนเอง แอปมี runtime ที่จำเป็นอยู่แล้ว",
+    ]),
+    "LST-GPU-004": ("หน่วยความจำกราฟิกไม่เพียงพอ", [
+        "ปิดเกม เบราว์เซอร์ และโปรแกรมอื่นที่ใช้ GPU หนัก",
+        "เรียกใช้การตรวจสอบอีกครั้งและตรวจสอบ VRAM ที่ว่าง",
+        "หากการแปลยังไม่ทำงาน ให้ใช้ GPU ที่มี VRAM มากขึ้น",
+    ]),
+    "LST-GPU-010": ("ตรวจพบ NVIDIA GPU หลายตัว", [
+        "เวอร์ชันปัจจุบันใช้ NVIDIA GPU 0",
+        "ตรวจสอบรายละเอียดทางเทคนิคว่าการ์ดใดแสดงเป็น gpu:0",
+        "หากใช้ GPU ผิดตัว ให้เปลี่ยนการตั้งค่า GPU ใน Windows/NVIDIA",
+    ]),
+    "LST-CAP-001": ("ไม่สามารถจับภาพหน้าจอได้อย่างถูกต้อง", [
+        "ตรวจสอบว่าจอที่ต้องการเชื่อมต่อกับ NVIDIA GPU",
+        "ลองใช้โหมด Borderless Windowed / หน้าต่างไร้ขอบ",
+        "รีสตาร์ต Local Screen Translator แล้วตรวจสอบอีกครั้ง",
+    ]),
+    "LST-NET-001": ("พอร์ตภายในเครื่อง 11435 ถูกใช้งานอยู่แล้ว", [
+        "ปิดแอป AI ภายในเครื่องอื่นและ Ollama ที่กำลังทำงาน",
+        "รีสตาร์ต Local Screen Translator",
+        "หากยังมีปัญหา ให้รีสตาร์ต Windows และเปิด Local Screen Translator ก่อน",
+    ]),
+    "LST-TTS-001": ("ไม่พบเสียงภาษาอังกฤษของ Microsoft ที่ใช้งานได้", [
+        "เปิดการตั้งค่าของ Local Screen Translator",
+        "เลือกและติดตั้งแพ็กเสียงภาษาอังกฤษของ Microsoft",
+        "รีสตาร์ต Windows หากจำเป็น",
+    ]),
+    "LST-CUDA-001": ("ไม่สามารถเริ่ม GPU OCR ได้", [
+        "อัปเดตหรือติดตั้งไดรเวอร์ NVIDIA ใหม่",
+        "รีสตาร์ต Windows และปิดโปรแกรมที่ใช้ GPU หนัก",
+        "อย่าติดตั้ง Python, PaddlePaddle หรือ CUDA Toolkit ด้วยตนเอง",
+    ]),
+    "LST-FILE-001": ("ไฟล์ที่จำเป็นของแอปหายไป", [
+        "อย่าดาวน์โหลดโมเดลหรือไฟล์ DLL แยกต่างหากด้วยตนเอง",
+        "ตรวจสอบประวัติการป้องกันใน Windows Security",
+        "ติดตั้งแอปใหม่ทั้งหมดโดยให้ Setup.exe และไฟล์ .bin ทั้งหมดอยู่ในโฟลเดอร์เดียวกัน",
+    ]),
+    "LST-ALIGN-001": ("ไม่สามารถเริ่มคอมโพเนนต์จัดแนวข้อความได้", [
+        "ตรวจสอบว่า Windows Security บล็อก LSTAlignWorker.exe หรือไม่",
+        "หากไฟล์ถูกลบ ให้ติดตั้งแอปใหม่ทั้งหมด",
+        "รีสตาร์ต Windows แล้วตรวจสอบอีกครั้ง",
+    ]),
+    "LST-DATA-001": ("แอปไม่สามารถบันทึกการตั้งค่าได้", [
+        "ตรวจสอบว่าบัญชี Windows ของคุณเขียนข้อมูลลงโฟลเดอร์ AppData ได้",
+        "ตรวจสอบ Controlled Folder Access และซอฟต์แวร์ความปลอดภัยอื่น",
+        "เรียกใช้การตรวจสอบระบบอีกครั้ง",
+    ]),
+    "LST-AI-001": ("ไม่สามารถเริ่มโมเดลแปลภายในเครื่องได้", [
+        "อัปเดตไดรเวอร์ NVIDIA แล้วรีสตาร์ต Windows",
+        "ปิดแอป AI อื่นและโปรแกรมที่ใช้ GPU หนัก",
+        "หากโมเดลหายไป ให้ติดตั้งแอปใหม่ทั้งหมด",
+    ]),
+    "LST-GEN-001": ("การตรวจสอบระบบพบปัญหา", [
+        "รีสตาร์ต Windows แล้วตรวจสอบอีกครั้ง",
+        "ค้นหาข้อความข้อผิดพลาดที่ตรงกันจากรายละเอียดทางเทคนิคบนอินเทอร์เน็ต",
+        "หากไฟล์หายไป ให้ติดตั้งแอปใหม่ทั้งหมด",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["zh-CN"] = {
+    "LST-SYS-001": ("不支持的 Windows 配置", [
+        "请使用 64 位 Windows 10 或 Windows 11。",
+        "安装所有可用的 Windows 更新。",
+        "重新启动 Windows，然后再次运行系统检查。",
+    ]),
+    "LST-GPU-001": ("未检测到 NVIDIA GPU 或驱动程序", [
+        "在设备管理器中确认 NVIDIA GPU 显示正常且没有错误。",
+        "安装或重新安装官方 NVIDIA 驱动程序。",
+        "重新启动 Windows，然后再次运行检查。",
+    ]),
+    "LST-GPU-002": ("NVIDIA 驱动程序版本过旧", [
+        "为您的显卡安装最新的 NVIDIA 驱动程序。",
+        "安装完成后重新启动 Windows。",
+        "再次运行系统检查。",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU 不兼容", [
+        "此 GPU 不支持所需的 CUDA/Paddle 环境。",
+        "请使用更新且兼容的 NVIDIA GPU。",
+        "不要手动安装 CUDA Toolkit；应用已经包含所需的运行环境。",
+    ]),
+    "LST-GPU-004": ("显存不足", [
+        "关闭游戏、浏览器以及其他大量占用 GPU 的程序。",
+        "再次运行检查并查看可用 VRAM。",
+        "如果翻译仍无法工作，请使用具有更多 VRAM 的 GPU。",
+    ]),
+    "LST-GPU-010": ("检测到多个 NVIDIA GPU", [
+        "当前版本使用 NVIDIA GPU 0。",
+        "在技术详细信息中查看哪张显卡显示为 gpu:0。",
+        "如果使用了错误的 GPU，请在 Windows/NVIDIA 中调整 GPU 配置。",
+    ]),
+    "LST-CAP-001": ("无法正确捕获屏幕", [
+        "确认需要使用的显示器连接到了 NVIDIA GPU。",
+        "尝试使用 Borderless Windowed / 无边框窗口模式。",
+        "重新启动 Local Screen Translator，然后再次运行检查。",
+    ]),
+    "LST-NET-001": ("本地端口 11435 已被占用", [
+        "关闭其他本地 AI 应用和正在运行的 Ollama 实例。",
+        "重新启动 Local Screen Translator。",
+        "如果问题仍然存在，请重新启动 Windows，并首先启动 Local Screen Translator。",
+    ]),
+    "LST-TTS-001": ("未找到可用的 Microsoft 英语语音", [
+        "打开 Local Screen Translator 设置。",
+        "选择并安装 Microsoft 英语语音包。",
+        "如有需要，请重新启动 Windows。",
+    ]),
+    "LST-CUDA-001": ("无法启动 GPU OCR", [
+        "更新或重新安装 NVIDIA 驱动程序。",
+        "重新启动 Windows，并关闭大量占用 GPU 的程序。",
+        "不要手动安装 Python、PaddlePaddle 或 CUDA Toolkit。",
+    ]),
+    "LST-FILE-001": ("缺少必要的应用文件", [
+        "不要手动下载单独的模型或 DLL 文件。",
+        "检查 Windows 安全中心的保护历史记录。",
+        "完整重新安装应用，并确保 Setup.exe 与所有 .bin 文件位于同一文件夹。",
+    ]),
+    "LST-ALIGN-001": ("无法启动文本对齐组件", [
+        "检查 Windows 安全中心是否阻止了 LSTAlignWorker.exe。",
+        "如果文件已被删除，请完整重新安装应用。",
+        "重新启动 Windows，然后再次运行检查。",
+    ]),
+    "LST-DATA-001": ("应用无法保存设置", [
+        "确认您的 Windows 帐户可以写入 AppData 文件夹。",
+        "检查 Controlled Folder Access 和其他安全软件。",
+        "再次运行系统检查。",
+    ]),
+    "LST-AI-001": ("无法启动本地翻译模型", [
+        "更新 NVIDIA 驱动程序，然后重新启动 Windows。",
+        "关闭其他 AI 应用以及大量使用 GPU 的程序。",
+        "如果模型缺失，请完整重新安装应用。",
+    ]),
+    "LST-GEN-001": ("系统检查发现问题", [
+        "重新启动 Windows，然后再次运行检查。",
+        "在互联网上搜索技术详细信息中的完整错误文本。",
+        "如果文件缺失，请完整重新安装应用。",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["zh-TW"] = {
+    "LST-SYS-001": ("不支援的 Windows 設定", [
+        "請使用 64 位元 Windows 10 或 Windows 11。",
+        "安裝所有可用的 Windows 更新。",
+        "重新啟動 Windows，然後再次執行系統檢查。",
+    ]),
+    "LST-GPU-001": ("未偵測到 NVIDIA GPU 或驅動程式", [
+        "在裝置管理員中確認 NVIDIA GPU 顯示正常且沒有錯誤。",
+        "安裝或重新安裝官方 NVIDIA 驅動程式。",
+        "重新啟動 Windows，然後再次執行檢查。",
+    ]),
+    "LST-GPU-002": ("NVIDIA 驅動程式版本過舊", [
+        "為您的顯示卡安裝最新 NVIDIA 驅動程式。",
+        "安裝完成後重新啟動 Windows。",
+        "再次執行系統檢查。",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU 不相容", [
+        "此 GPU 不支援所需的 CUDA/Paddle 環境。",
+        "請使用較新且相容的 NVIDIA GPU。",
+        "請勿手動安裝 CUDA Toolkit；應用程式已包含所需執行環境。",
+    ]),
+    "LST-GPU-004": ("顯示記憶體不足", [
+        "關閉遊戲、瀏覽器以及其他大量使用 GPU 的程式。",
+        "再次執行檢查並查看可用 VRAM。",
+        "若翻譯仍無法運作，請使用具有更多 VRAM 的 GPU。",
+    ]),
+    "LST-GPU-010": ("偵測到多個 NVIDIA GPU", [
+        "目前版本使用 NVIDIA GPU 0。",
+        "在技術詳細資訊中查看哪張顯示卡顯示為 gpu:0。",
+        "若使用了錯誤的 GPU，請在 Windows/NVIDIA 中調整 GPU 設定。",
+    ]),
+    "LST-CAP-001": ("無法正確擷取螢幕", [
+        "確認需要使用的顯示器連接至 NVIDIA GPU。",
+        "嘗試 Borderless Windowed / 無邊框視窗模式。",
+        "重新啟動 Local Screen Translator，然後再次執行檢查。",
+    ]),
+    "LST-NET-001": ("本機連接埠 11435 已被使用", [
+        "關閉其他本機 AI 應用程式以及正在執行的 Ollama。",
+        "重新啟動 Local Screen Translator。",
+        "若問題仍存在，請重新啟動 Windows，並先開啟 Local Screen Translator。",
+    ]),
+    "LST-TTS-001": ("找不到可使用的 Microsoft 英語語音", [
+        "開啟 Local Screen Translator 設定。",
+        "選擇並安裝 Microsoft 英語語音套件。",
+        "如有需要，請重新啟動 Windows。",
+    ]),
+    "LST-CUDA-001": ("無法啟動 GPU OCR", [
+        "更新或重新安裝 NVIDIA 驅動程式。",
+        "重新啟動 Windows，並關閉大量使用 GPU 的程式。",
+        "請勿手動安裝 Python、PaddlePaddle 或 CUDA Toolkit。",
+    ]),
+    "LST-FILE-001": ("缺少必要的應用程式檔案", [
+        "請勿手動下載個別模型或 DLL 檔案。",
+        "檢查 Windows 安全性中的保護歷程記錄。",
+        "完整重新安裝應用程式，並確保 Setup.exe 與所有 .bin 檔案位於同一資料夾。",
+    ]),
+    "LST-ALIGN-001": ("無法啟動文字對齊元件", [
+        "檢查 Windows 安全性是否封鎖了 LSTAlignWorker.exe。",
+        "若檔案已被移除，請完整重新安裝應用程式。",
+        "重新啟動 Windows，然後再次執行檢查。",
+    ]),
+    "LST-DATA-001": ("應用程式無法儲存設定", [
+        "確認您的 Windows 帳戶可以寫入 AppData 資料夾。",
+        "檢查 Controlled Folder Access 和其他安全性軟體。",
+        "再次執行系統檢查。",
+    ]),
+    "LST-AI-001": ("無法啟動本機翻譯模型", [
+        "更新 NVIDIA 驅動程式，然後重新啟動 Windows。",
+        "關閉其他 AI 應用程式以及大量使用 GPU 的程式。",
+        "若模型遺失，請完整重新安裝應用程式。",
+    ]),
+    "LST-GEN-001": ("系統檢查發現問題", [
+        "重新啟動 Windows，然後再次執行檢查。",
+        "在網路上搜尋技術詳細資訊中的完整錯誤文字。",
+        "若檔案遺失，請完整重新安裝應用程式。",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["ja"] = {
+    "LST-SYS-001": ("サポートされていない Windows 構成です", [
+        "64 ビット版の Windows 10 または Windows 11 を使用してください。",
+        "利用可能な Windows 更新プログラムをすべてインストールしてください。",
+        "Windows を再起動して、システムチェックをもう一度実行してください。",
+    ]),
+    "LST-GPU-001": ("NVIDIA GPU またはドライバーを検出できません", [
+        "デバイス マネージャーで NVIDIA GPU がエラーなしで表示されることを確認してください。",
+        "公式 NVIDIA ドライバーをインストールまたは再インストールしてください。",
+        "Windows を再起動して、もう一度チェックしてください。",
+    ]),
+    "LST-GPU-002": ("NVIDIA ドライバーが古すぎます", [
+        "お使いのグラフィックカード用の最新 NVIDIA ドライバーをインストールしてください。",
+        "インストール後に Windows を再起動してください。",
+        "システムチェックをもう一度実行してください。",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU に互換性がありません", [
+        "この GPU は必要な CUDA/Paddle 環境をサポートしていません。",
+        "より新しい互換性のある NVIDIA GPU を使用してください。",
+        "CUDA Toolkit を手動でインストールしないでください。必要なランタイムはアプリに含まれています。",
+    ]),
+    "LST-GPU-004": ("ビデオメモリが不足しています", [
+        "ゲーム、ブラウザー、その他 GPU を大量に使用するプログラムを終了してください。",
+        "もう一度チェックを実行して、空き VRAM を確認してください。",
+        "翻訳がまだ動作しない場合は、より多くの VRAM を持つ GPU を使用してください。",
+    ]),
+    "LST-GPU-010": ("複数の NVIDIA GPU が検出されました", [
+        "現在のバージョンは NVIDIA GPU 0 を使用します。",
+        "技術情報で、どのカードが gpu:0 と表示されているか確認してください。",
+        "誤った GPU が使用されている場合は、Windows/NVIDIA の GPU 設定を変更してください。",
+    ]),
+    "LST-CAP-001": ("画面を正しくキャプチャできません", [
+        "使用するモニターが NVIDIA GPU に接続されていることを確認してください。",
+        "Borderless Windowed / ボーダーレスウィンドウモードを試してください。",
+        "Local Screen Translator を再起動して、もう一度チェックしてください。",
+    ]),
+    "LST-NET-001": ("ローカルポート 11435 はすでに使用されています", [
+        "他のローカル AI アプリと実行中の Ollama を終了してください。",
+        "Local Screen Translator を再起動してください。",
+        "問題が続く場合は Windows を再起動し、最初に Local Screen Translator を起動してください。",
+    ]),
+    "LST-TTS-001": ("利用可能な Microsoft 英語音声が見つかりません", [
+        "Local Screen Translator の設定を開いてください。",
+        "Microsoft の英語音声パックを選択してインストールしてください。",
+        "必要に応じて Windows を再起動してください。",
+    ]),
+    "LST-CUDA-001": ("GPU OCR を開始できません", [
+        "NVIDIA ドライバーを更新または再インストールしてください。",
+        "Windows を再起動し、GPU を大量に使用するプログラムを終了してください。",
+        "Python、PaddlePaddle、CUDA Toolkit を手動でインストールしないでください。",
+    ]),
+    "LST-FILE-001": ("必要なアプリケーションファイルがありません", [
+        "個別のモデルや DLL ファイルを手動でダウンロードしないでください。",
+        "Windows セキュリティの保護の履歴を確認してください。",
+        "Setup.exe とすべての .bin ファイルを同じフォルダーに置いた状態で、アプリ全体を再インストールしてください。",
+    ]),
+    "LST-ALIGN-001": ("テキスト整列コンポーネントを開始できません", [
+        "Windows セキュリティが LSTAlignWorker.exe をブロックしていないか確認してください。",
+        "ファイルが削除されている場合は、アプリ全体を再インストールしてください。",
+        "Windows を再起動して、もう一度チェックしてください。",
+    ]),
+    "LST-DATA-001": ("アプリが設定を保存できません", [
+        "Windows アカウントが AppData フォルダーへ書き込めることを確認してください。",
+        "Controlled Folder Access とその他のセキュリティソフトを確認してください。",
+        "システムチェックをもう一度実行してください。",
+    ]),
+    "LST-AI-001": ("ローカル翻訳モデルを開始できません", [
+        "NVIDIA ドライバーを更新し、Windows を再起動してください。",
+        "他の AI アプリと GPU を大量に使用するプログラムを終了してください。",
+        "モデルが不足している場合は、アプリ全体を再インストールしてください。",
+    ]),
+    "LST-GEN-001": ("システムチェックで問題が見つかりました", [
+        "Windows を再起動して、もう一度チェックしてください。",
+        "技術情報に表示されている正確なエラー文をインターネットで検索してください。",
+        "ファイルが不足している場合は、アプリ全体を再インストールしてください。",
+    ]),
+}
+
+
+HELP_TRANSLATIONS_EXTRA["ko"] = {
+    "LST-SYS-001": ("지원되지 않는 Windows 구성입니다", [
+        "64비트 Windows 10 또는 Windows 11을 사용하십시오.",
+        "사용 가능한 Windows 업데이트를 모두 설치하십시오.",
+        "Windows를 다시 시작한 후 시스템 검사를 다시 실행하십시오.",
+    ]),
+    "LST-GPU-001": ("NVIDIA GPU 또는 드라이버를 감지하지 못했습니다", [
+        "장치 관리자에서 NVIDIA GPU가 오류 없이 표시되는지 확인하십시오.",
+        "공식 NVIDIA 드라이버를 설치하거나 다시 설치하십시오.",
+        "Windows를 다시 시작한 후 검사를 다시 실행하십시오.",
+    ]),
+    "LST-GPU-002": ("NVIDIA 드라이버가 너무 오래되었습니다", [
+        "그래픽 카드용 최신 NVIDIA 드라이버를 설치하십시오.",
+        "설치 후 Windows를 다시 시작하십시오.",
+        "시스템 검사를 다시 실행하십시오.",
+    ]),
+    "LST-GPU-003": ("NVIDIA GPU가 호환되지 않습니다", [
+        "이 GPU는 필요한 CUDA/Paddle 환경을 지원하지 않습니다.",
+        "더 최신의 호환 NVIDIA GPU를 사용하십시오.",
+        "CUDA Toolkit을 수동으로 설치하지 마십시오. 필요한 런타임은 앱에 포함되어 있습니다.",
+    ]),
+    "LST-GPU-004": ("그래픽 메모리가 부족합니다", [
+        "게임, 브라우저 및 GPU를 많이 사용하는 다른 프로그램을 종료하십시오.",
+        "검사를 다시 실행하고 사용 가능한 VRAM을 확인하십시오.",
+        "번역이 계속 작동하지 않으면 VRAM이 더 많은 GPU를 사용하십시오.",
+    ]),
+    "LST-GPU-010": ("여러 NVIDIA GPU가 감지되었습니다", [
+        "현재 버전은 NVIDIA GPU 0을 사용합니다.",
+        "기술 세부 정보에서 어떤 카드가 gpu:0으로 표시되는지 확인하십시오.",
+        "잘못된 GPU가 사용되는 경우 Windows/NVIDIA의 GPU 구성을 변경하십시오.",
+    ]),
+    "LST-CAP-001": ("화면을 올바르게 캡처할 수 없습니다", [
+        "사용하려는 모니터가 NVIDIA GPU에 연결되어 있는지 확인하십시오.",
+        "Borderless Windowed / 테두리 없는 창 모드를 사용해 보십시오.",
+        "Local Screen Translator를 다시 시작한 후 검사를 다시 실행하십시오.",
+    ]),
+    "LST-NET-001": ("로컬 포트 11435가 이미 사용 중입니다", [
+        "다른 로컬 AI 앱과 실행 중인 Ollama 인스턴스를 종료하십시오.",
+        "Local Screen Translator를 다시 시작하십시오.",
+        "문제가 계속되면 Windows를 다시 시작한 후 Local Screen Translator를 가장 먼저 실행하십시오.",
+    ]),
+    "LST-TTS-001": ("사용 가능한 Microsoft 영어 음성을 찾지 못했습니다", [
+        "Local Screen Translator 설정을 여십시오.",
+        "Microsoft 영어 음성 팩을 선택하여 설치하십시오.",
+        "필요한 경우 Windows를 다시 시작하십시오.",
+    ]),
+    "LST-CUDA-001": ("GPU OCR을 시작할 수 없습니다", [
+        "NVIDIA 드라이버를 업데이트하거나 다시 설치하십시오.",
+        "Windows를 다시 시작하고 GPU를 많이 사용하는 프로그램을 종료하십시오.",
+        "Python, PaddlePaddle 또는 CUDA Toolkit을 수동으로 설치하지 마십시오.",
+    ]),
+    "LST-FILE-001": ("필수 애플리케이션 파일이 없습니다", [
+        "개별 모델이나 DLL 파일을 수동으로 다운로드하지 마십시오.",
+        "Windows Security의 보호 기록을 확인하십시오.",
+        "Setup.exe와 모든 .bin 파일을 같은 폴더에 둔 상태로 전체 앱을 다시 설치하십시오.",
+    ]),
+    "LST-ALIGN-001": ("텍스트 정렬 구성 요소를 시작할 수 없습니다", [
+        "Windows Security가 LSTAlignWorker.exe를 차단했는지 확인하십시오.",
+        "파일이 제거된 경우 전체 앱을 다시 설치하십시오.",
+        "Windows를 다시 시작한 후 검사를 다시 실행하십시오.",
+    ]),
+    "LST-DATA-001": ("앱이 설정을 저장할 수 없습니다", [
+        "Windows 계정이 AppData 폴더에 쓸 수 있는지 확인하십시오.",
+        "Controlled Folder Access 및 기타 보안 소프트웨어를 확인하십시오.",
+        "시스템 검사를 다시 실행하십시오.",
+    ]),
+    "LST-AI-001": ("로컬 번역 모델을 시작할 수 없습니다", [
+        "NVIDIA 드라이버를 업데이트하고 Windows를 다시 시작하십시오.",
+        "다른 AI 앱과 GPU를 많이 사용하는 프로그램을 종료하십시오.",
+        "모델이 누락된 경우 전체 앱을 다시 설치하십시오.",
+    ]),
+    "LST-GEN-001": ("시스템 검사에서 문제가 발견되었습니다", [
+        "Windows를 다시 시작한 후 검사를 다시 실행하십시오.",
+        "기술 세부 정보에 표시된 정확한 오류 문구를 인터넷에서 검색하십시오.",
+        "파일이 누락된 경우 전체 앱을 다시 설치하십시오.",
+    ]),
+}
+
+
 # Convert compact tuples to the structure used by system_check_help.py.
 for _language, _entries in list(HELP_TRANSLATIONS_EXTRA.items()):
     HELP_TRANSLATIONS_EXTRA[_language] = {

@@ -858,6 +858,355 @@ SC_TRANSLATIONS.update({
 })
 
 
+# SYSTEM CHECK LANGUAGE BATCH 4A
+SC_TRANSLATIONS.update({
+    "hr": {
+        "system_check": "Provjera sustava",
+        "description": (
+            "Provjerava GPU, OCR, snimanje zaslona, lokalne AI modele, "
+            "poravnanje teksta i Windows sintezu govora."
+        ),
+        "ready_to_check": "Spremno za provjeru.",
+        "checking": (
+            "Provjera kompatibilnosti sustava. "
+            "Test AI modela može potrajati..."
+        ),
+        "placeholder": "Rezultati provjere sustava pojavit će se ovdje.",
+        "run_again": "Provjeri ponovno",
+        "copy_report": "Kopiraj izvješće",
+        "close": "Zatvori",
+        "copied": "Kopirano",
+        "status_ready": "Sustav je spreman — sve provjere kompatibilnosti su uspješne.",
+        "status_warnings": "Provjera sustava završena je s upozorenjima.",
+        "status_problems": "Pronađeni su problemi. Slijedite upute u nastavku.",
+        "status_failed": "Provjera sustava nije mogla biti dovršena.",
+        "technical_details": "TEHNIČKI DETALJI",
+        "report_ready_title": "SUSTAV JE SPREMAN",
+        "report_ready_line1": "Sve provjere kompatibilnosti uspješno su završene.",
+        "report_ready_line2": "Local Screen Translator spreman je za korištenje.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - SAMOSTALNA DIJAGNOSTIKA",
+        "report_detected": "Otkriveno:",
+        "report_how_to_fix": "Kako riješiti:",
+        "report_search_web": "Pretražite Internet:",
+        "report_after_steps": "Nakon ovih koraka ponovno pokrenite provjeru sustava.",
+    },
+
+    "tr": {
+        "system_check": "Sistem Kontrolü",
+        "description": (
+            "GPU, OCR, ekran yakalama, yerel AI modelleri, "
+            "metin hizalama ve Windows konuşma sentezini kontrol eder."
+        ),
+        "ready_to_check": "Kontrole hazır.",
+        "checking": (
+            "Sistem uyumluluğu kontrol ediliyor. "
+            "AI modeli testi biraz zaman alabilir..."
+        ),
+        "placeholder": "Sistem kontrolü sonuçları burada görünecek.",
+        "run_again": "Tekrar kontrol et",
+        "copy_report": "Raporu kopyala",
+        "close": "Kapat",
+        "copied": "Kopyalandı",
+        "status_ready": "Sistem hazır — tüm uyumluluk kontrolleri başarıyla tamamlandı.",
+        "status_warnings": "Sistem kontrolü uyarılarla tamamlandı.",
+        "status_problems": "Sorunlar bulundu. Aşağıdaki talimatları uygulayın.",
+        "status_failed": "Sistem kontrolü tamamlanamadı.",
+        "technical_details": "TEKNİK AYRINTILAR",
+        "report_ready_title": "SİSTEM HAZIR",
+        "report_ready_line1": "Tüm uyumluluk kontrolleri başarıyla tamamlandı.",
+        "report_ready_line2": "Local Screen Translator kullanıma hazır.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - KENDİ KENDİNE TANI",
+        "report_detected": "Algılandı:",
+        "report_how_to_fix": "Nasıl düzeltilir:",
+        "report_search_web": "İnternette ara:",
+        "report_after_steps": "Bu adımları tamamladıktan sonra Sistem Kontrolünü tekrar çalıştırın.",
+    },
+
+    "ar": {
+        "system_check": "فحص النظام",
+        "description": (
+            "يفحص بطاقة الرسومات وOCR والتقاط الشاشة ونماذج الذكاء الاصطناعي المحلية "
+            "ومحاذاة النص وتحويل النص إلى كلام في Windows."
+        ),
+        "ready_to_check": "جاهز للفحص.",
+        "checking": (
+            "جارٍ فحص توافق النظام. "
+            "قد يستغرق اختبار نماذج الذكاء الاصطناعي بعض الوقت..."
+        ),
+        "placeholder": "ستظهر نتائج فحص النظام هنا.",
+        "run_again": "إعادة الفحص",
+        "copy_report": "نسخ التقرير",
+        "close": "إغلاق",
+        "copied": "تم النسخ",
+        "status_ready": "النظام جاهز — اجتازت جميع اختبارات التوافق.",
+        "status_warnings": "اكتمل فحص النظام مع وجود تحذيرات.",
+        "status_problems": "تم العثور على مشكلات. اتبع التعليمات أدناه.",
+        "status_failed": "تعذر إكمال فحص النظام.",
+        "technical_details": "التفاصيل التقنية",
+        "report_ready_title": "النظام جاهز",
+        "report_ready_line1": "تم اجتياز جميع اختبارات التوافق بنجاح.",
+        "report_ready_line2": "Local Screen Translator جاهز للاستخدام.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - التشخيص الذاتي",
+        "report_detected": "تم اكتشاف:",
+        "report_how_to_fix": "طريقة الإصلاح:",
+        "report_search_web": "ابحث على الإنترنت عن:",
+        "report_after_steps": "بعد تنفيذ هذه الخطوات، شغّل فحص النظام مرة أخرى.",
+    },
+
+    "hi": {
+        "system_check": "सिस्टम जाँच",
+        "description": (
+            "GPU, OCR, स्क्रीन कैप्चर, स्थानीय AI मॉडल, "
+            "टेक्स्ट अलाइनमेंट और Windows स्पीच सिंथेसिस की जाँच करता है।"
+        ),
+        "ready_to_check": "जाँच के लिए तैयार।",
+        "checking": (
+            "सिस्टम संगतता की जाँच की जा रही है। "
+            "AI मॉडल परीक्षण में थोड़ा समय लग सकता है..."
+        ),
+        "placeholder": "सिस्टम जाँच के परिणाम यहाँ दिखाई देंगे।",
+        "run_again": "फिर से जाँचें",
+        "copy_report": "रिपोर्ट कॉपी करें",
+        "close": "बंद करें",
+        "copied": "कॉपी किया गया",
+        "status_ready": "सिस्टम तैयार है — सभी संगतता जाँच सफल रहीं।",
+        "status_warnings": "सिस्टम जाँच चेतावनियों के साथ पूरी हुई।",
+        "status_problems": "समस्याएँ मिलीं। नीचे दिए गए निर्देशों का पालन करें।",
+        "status_failed": "सिस्टम जाँच पूरी नहीं हो सकी।",
+        "technical_details": "तकनीकी विवरण",
+        "report_ready_title": "सिस्टम तैयार है",
+        "report_ready_line1": "सभी संगतता जाँच सफलतापूर्वक पूरी हुईं।",
+        "report_ready_line2": "Local Screen Translator उपयोग के लिए तैयार है।",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - स्व-सहायता निदान",
+        "report_detected": "पता चला:",
+        "report_how_to_fix": "कैसे ठीक करें:",
+        "report_search_web": "इंटरनेट पर खोजें:",
+        "report_after_steps": "इन चरणों को पूरा करने के बाद सिस्टम जाँच फिर से चलाएँ।",
+    },
+
+    "vi": {
+        "system_check": "Kiểm tra hệ thống",
+        "description": (
+            "Kiểm tra GPU, OCR, chụp màn hình, mô hình AI cục bộ, "
+            "căn chỉnh văn bản và tổng hợp giọng nói Windows."
+        ),
+        "ready_to_check": "Sẵn sàng kiểm tra.",
+        "checking": (
+            "Đang kiểm tra khả năng tương thích của hệ thống. "
+            "Kiểm tra mô hình AI có thể mất một chút thời gian..."
+        ),
+        "placeholder": "Kết quả kiểm tra hệ thống sẽ xuất hiện ở đây.",
+        "run_again": "Kiểm tra lại",
+        "copy_report": "Sao chép báo cáo",
+        "close": "Đóng",
+        "copied": "Đã sao chép",
+        "status_ready": "Hệ thống đã sẵn sàng — tất cả kiểm tra tương thích đều thành công.",
+        "status_warnings": "Kiểm tra hệ thống hoàn tất với cảnh báo.",
+        "status_problems": "Đã phát hiện sự cố. Hãy làm theo hướng dẫn bên dưới.",
+        "status_failed": "Không thể hoàn tất kiểm tra hệ thống.",
+        "technical_details": "CHI TIẾT KỸ THUẬT",
+        "report_ready_title": "HỆ THỐNG ĐÃ SẴN SÀNG",
+        "report_ready_line1": "Tất cả kiểm tra tương thích đã hoàn tất thành công.",
+        "report_ready_line2": "Local Screen Translator đã sẵn sàng để sử dụng.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - CHẨN ĐOÁN TỰ PHỤC VỤ",
+        "report_detected": "Phát hiện:",
+        "report_how_to_fix": "Cách khắc phục:",
+        "report_search_web": "Tìm kiếm trên Internet:",
+        "report_after_steps": "Sau khi hoàn thành các bước này, hãy chạy lại Kiểm tra hệ thống.",
+    },
+
+    "id": {
+        "system_check": "Pemeriksaan Sistem",
+        "description": (
+            "Memeriksa GPU, OCR, tangkapan layar, model AI lokal, "
+            "penyelarasan teks, dan sintesis suara Windows."
+        ),
+        "ready_to_check": "Siap diperiksa.",
+        "checking": (
+            "Memeriksa kompatibilitas sistem. "
+            "Pengujian model AI mungkin memerlukan sedikit waktu..."
+        ),
+        "placeholder": "Hasil Pemeriksaan Sistem akan muncul di sini.",
+        "run_again": "Periksa lagi",
+        "copy_report": "Salin laporan",
+        "close": "Tutup",
+        "copied": "Disalin",
+        "status_ready": "Sistem siap — semua pemeriksaan kompatibilitas berhasil.",
+        "status_warnings": "Pemeriksaan sistem selesai dengan peringatan.",
+        "status_problems": "Masalah ditemukan. Ikuti petunjuk di bawah.",
+        "status_failed": "Pemeriksaan sistem tidak dapat diselesaikan.",
+        "technical_details": "DETAIL TEKNIS",
+        "report_ready_title": "SISTEM SIAP",
+        "report_ready_line1": "Semua pemeriksaan kompatibilitas berhasil diselesaikan.",
+        "report_ready_line2": "Local Screen Translator siap digunakan.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - DIAGNOSIS MANDIRI",
+        "report_detected": "Terdeteksi:",
+        "report_how_to_fix": "Cara memperbaiki:",
+        "report_search_web": "Cari di Internet:",
+        "report_after_steps": "Setelah menyelesaikan langkah-langkah ini, jalankan Pemeriksaan Sistem lagi.",
+    },
+})
+
+
+# SYSTEM CHECK LANGUAGE BATCH 4B
+SC_TRANSLATIONS.update({
+    "th": {
+        "system_check": "ตรวจสอบระบบ",
+        "description": (
+            "ตรวจสอบ GPU, OCR, การจับภาพหน้าจอ, โมเดล AI ภายในเครื่อง, "
+            "การจัดแนวข้อความ และการสังเคราะห์เสียงของ Windows"
+        ),
+        "ready_to_check": "พร้อมตรวจสอบ",
+        "checking": (
+            "กำลังตรวจสอบความเข้ากันได้ของระบบ "
+            "การทดสอบโมเดล AI อาจใช้เวลาสักครู่..."
+        ),
+        "placeholder": "ผลการตรวจสอบระบบจะแสดงที่นี่",
+        "run_again": "ตรวจสอบอีกครั้ง",
+        "copy_report": "คัดลอกรายงาน",
+        "close": "ปิด",
+        "copied": "คัดลอกแล้ว",
+        "status_ready": "ระบบพร้อมใช้งาน — ผ่านการตรวจสอบความเข้ากันได้ทั้งหมดแล้ว",
+        "status_warnings": "การตรวจสอบระบบเสร็จสิ้นพร้อมคำเตือน",
+        "status_problems": "พบปัญหา โปรดทำตามคำแนะนำด้านล่าง",
+        "status_failed": "ไม่สามารถตรวจสอบระบบให้เสร็จสมบูรณ์ได้",
+        "technical_details": "รายละเอียดทางเทคนิค",
+        "report_ready_title": "ระบบพร้อมใช้งาน",
+        "report_ready_line1": "ผ่านการตรวจสอบความเข้ากันได้ทั้งหมดเรียบร้อยแล้ว",
+        "report_ready_line2": "Local Screen Translator พร้อมใช้งานแล้ว",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - การวินิจฉัยด้วยตนเอง",
+        "report_detected": "ตรวจพบ:",
+        "report_how_to_fix": "วิธีแก้ไข:",
+        "report_search_web": "ค้นหาบนอินเทอร์เน็ต:",
+        "report_after_steps": "หลังจากทำตามขั้นตอนเหล่านี้แล้ว ให้เรียกใช้การตรวจสอบระบบอีกครั้ง",
+    },
+
+    "zh-CN": {
+        "system_check": "系统检查",
+        "description": (
+            "检查 GPU、OCR、屏幕捕获、本地 AI 模型、"
+            "文本对齐以及 Windows 语音合成。"
+        ),
+        "ready_to_check": "已准备好检查。",
+        "checking": (
+            "正在检查系统兼容性。"
+            "AI 模型测试可能需要一些时间..."
+        ),
+        "placeholder": "系统检查结果将显示在这里。",
+        "run_again": "重新检查",
+        "copy_report": "复制报告",
+        "close": "关闭",
+        "copied": "已复制",
+        "status_ready": "系统已就绪 — 所有兼容性检查均已通过。",
+        "status_warnings": "系统检查已完成，但存在警告。",
+        "status_problems": "发现问题。请按照下面的说明操作。",
+        "status_failed": "无法完成系统检查。",
+        "technical_details": "技术详细信息",
+        "report_ready_title": "系统已就绪",
+        "report_ready_line1": "所有兼容性检查均已成功通过。",
+        "report_ready_line2": "Local Screen Translator 已准备好使用。",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - 自助诊断",
+        "report_detected": "检测到:",
+        "report_how_to_fix": "解决方法:",
+        "report_search_web": "在互联网上搜索:",
+        "report_after_steps": "完成这些步骤后，请再次运行系统检查。",
+    },
+
+    "zh-TW": {
+        "system_check": "系統檢查",
+        "description": (
+            "檢查 GPU、OCR、螢幕擷取、本機 AI 模型、"
+            "文字對齊以及 Windows 語音合成。"
+        ),
+        "ready_to_check": "已準備好檢查。",
+        "checking": (
+            "正在檢查系統相容性。"
+            "AI 模型測試可能需要一些時間..."
+        ),
+        "placeholder": "系統檢查結果將顯示在這裡。",
+        "run_again": "重新檢查",
+        "copy_report": "複製報告",
+        "close": "關閉",
+        "copied": "已複製",
+        "status_ready": "系統已就緒 — 所有相容性檢查皆已通過。",
+        "status_warnings": "系統檢查已完成，但有警告。",
+        "status_problems": "發現問題。請依照下方說明操作。",
+        "status_failed": "無法完成系統檢查。",
+        "technical_details": "技術詳細資訊",
+        "report_ready_title": "系統已就緒",
+        "report_ready_line1": "所有相容性檢查皆已成功通過。",
+        "report_ready_line2": "Local Screen Translator 已準備好使用。",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - 自助診斷",
+        "report_detected": "偵測到:",
+        "report_how_to_fix": "解決方法:",
+        "report_search_web": "在網路上搜尋:",
+        "report_after_steps": "完成這些步驟後，請再次執行系統檢查。",
+    },
+
+    "ja": {
+        "system_check": "システムチェック",
+        "description": (
+            "GPU、OCR、画面キャプチャ、ローカル AI モデル、"
+            "テキスト整列、Windows 音声合成を確認します。"
+        ),
+        "ready_to_check": "チェックの準備ができました。",
+        "checking": (
+            "システムの互換性を確認しています。"
+            "AI モデルのテストには少し時間がかかる場合があります..."
+        ),
+        "placeholder": "システムチェックの結果がここに表示されます。",
+        "run_again": "もう一度チェック",
+        "copy_report": "レポートをコピー",
+        "close": "閉じる",
+        "copied": "コピーしました",
+        "status_ready": "システムは準備完了です — すべての互換性チェックに合格しました。",
+        "status_warnings": "システムチェックは警告付きで完了しました。",
+        "status_problems": "問題が見つかりました。以下の手順に従ってください。",
+        "status_failed": "システムチェックを完了できませんでした。",
+        "technical_details": "技術情報",
+        "report_ready_title": "システムは準備完了です",
+        "report_ready_line1": "すべての互換性チェックに正常に合格しました。",
+        "report_ready_line2": "Local Screen Translator を使用する準備ができました。",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - 自己診断",
+        "report_detected": "検出:",
+        "report_how_to_fix": "解決方法:",
+        "report_search_web": "インターネットで検索:",
+        "report_after_steps": "これらの手順を完了した後、システムチェックをもう一度実行してください。",
+    },
+
+    "ko": {
+        "system_check": "시스템 검사",
+        "description": (
+            "GPU, OCR, 화면 캡처, 로컬 AI 모델, "
+            "텍스트 정렬 및 Windows 음성 합성을 검사합니다."
+        ),
+        "ready_to_check": "검사 준비가 되었습니다.",
+        "checking": (
+            "시스템 호환성을 검사하고 있습니다. "
+            "AI 모델 테스트에는 시간이 조금 걸릴 수 있습니다..."
+        ),
+        "placeholder": "시스템 검사 결과가 여기에 표시됩니다.",
+        "run_again": "다시 검사",
+        "copy_report": "보고서 복사",
+        "close": "닫기",
+        "copied": "복사됨",
+        "status_ready": "시스템이 준비되었습니다 — 모든 호환성 검사를 통과했습니다.",
+        "status_warnings": "시스템 검사가 경고와 함께 완료되었습니다.",
+        "status_problems": "문제가 발견되었습니다. 아래 지침을 따르십시오.",
+        "status_failed": "시스템 검사를 완료할 수 없습니다.",
+        "technical_details": "기술 세부 정보",
+        "report_ready_title": "시스템 준비 완료",
+        "report_ready_line1": "모든 호환성 검사를 성공적으로 통과했습니다.",
+        "report_ready_line2": "Local Screen Translator를 사용할 준비가 되었습니다.",
+        "report_self_help_title": "LOCAL SCREEN TRANSLATOR - 자체 진단",
+        "report_detected": "감지됨:",
+        "report_how_to_fix": "해결 방법:",
+        "report_search_web": "인터넷 검색:",
+        "report_after_steps": "이 단계를 완료한 후 시스템 검사를 다시 실행하십시오.",
+    },
+})
+
+
 def current_system_check_language() -> str:
     try:
         from user_settings import USER_SETTINGS
